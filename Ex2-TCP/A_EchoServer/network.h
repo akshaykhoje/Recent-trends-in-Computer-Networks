@@ -10,7 +10,8 @@
 #define ADDRESS_FAMILY AF_INET
 #define ADDRESS_BUFFER_SIZE 30
 #define MSG_BUFFER_SIZE 100
-#define TERMINATION_STRING "ENDSESSION"
+#define TERMINATION_INIT_STRING "ENDSESSION"
+#define TERMINATION_ACK_STRING "ENDSESSION_ACK"
 
 /*	
 Use BLOCKING sockets (default configuration)
@@ -31,8 +32,12 @@ int make_socket(){
 	return sock_fd;
 }
 
-short check_termination_msg(char *msg){
-	return (strcmp(msg, TERMINATION_STRING)==0);
+short check_termination_init(char *msg){
+	return (strcmp(msg, TERMINATION_INIT_STRING)==0);
+}
+
+short check_termination_ack(char *msg){
+	return (strcmp(msg, TERMINATION_ACK_STRING)==0);
 }
 
 short bind_server_socket(int sock_fd){
@@ -48,6 +53,7 @@ short bind_server_socket(int sock_fd){
 		return 0;    // Success
 	}
 	else{
+		printf("%d", errno);
 		return -3;   // Could not bind server-socket
 	}
 }

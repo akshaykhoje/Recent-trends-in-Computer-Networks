@@ -12,8 +12,30 @@ void main(){
 	}
 
 	if (connect_server(self_socket) < 0){
-		printf("\nCould not conect to a server. Retry!\n");
+		printf("\nCould not connect to ECHO-Server. Retry!\n");
 		destroy_socket(self_socket);
 		return;
 	}
+	else{
+		printf("\nConnected to ECHO-Server");
+	}
+
+	char *msg_buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
+	int msg_size = 0;
+	printf("\nEnter 'ENDSESSION' to terminate connection\n");
+	do {
+		bzero(msg_buffer, MSG_BUFFER_SIZE);
+		printf("\nEnter Ping Message: ");
+		scanf(" %s", msg_buffer);
+		msg_size = write(self_socket, msg_buffer, MSG_BUFFER_SIZE);
+		// Reading back
+		bzero(msg_buffer, MSG_BUFFER_SIZE);
+		msg_size = read(self_socket, msg_buffer, MSG_BUFFER_SIZE);
+		// Check if server acknowledged ENDSESSION
+		if (check_termination_ack(msg_buffer)){
+			printf("\nExiting...\n");
+			break;
+		}
+		printf("SERVER echoed: %s\n", msg_buffer, MSG_BUFFER_SIZE);
+	}while(1==1);
 }

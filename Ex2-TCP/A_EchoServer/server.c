@@ -47,7 +47,7 @@ void main(){
 			printf("Client connected.\nCould not read address\n");
 		}
 		else{
-			printf("Connected to Client (%s:%d)", client_addr_ip_str, client_addr_port);
+			printf("Connected to Client (%s:%d)\n", client_addr_ip_str, client_addr_port);
 		}
 	}
 
@@ -57,14 +57,17 @@ void main(){
 		// BLOCKING routine to wait for a message
 		bzero(msg_buffer, MSG_BUFFER_SIZE);
 		msg_size = read(client_socket, msg_buffer, MSG_BUFFER_SIZE);
-		if (check_termination_msg(msg_buffer)){
+		// Echo back
+		if (check_termination_init(msg_buffer)){
 			printf("\nClient terminated connection\n");
+			bzero(msg_buffer, MSG_BUFFER_SIZE);
+			msg_size = write(client_socket, TERMINATION_ACK_STRING, msg_size);
 			destroy_socket(client_socket);
 			break;
 		}
-		printf("\nCLIENT said: %s", msg_buffer);
+		printf("\nCLIENT pinged: %s", msg_buffer);
 		msg_size = write(client_socket, msg_buffer, msg_size);
-		printf("\nMessage echoed back\n");
+		printf("\n( Message echoed back )\n");
 	}while(1==1);
 
 	destroy_socket(self_socket);
