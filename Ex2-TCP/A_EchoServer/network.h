@@ -1,9 +1,9 @@
 #include<sys/socket.h>
 #include<arpa/inet.h>
 #include<unistd.h>
+#include<errno.h>
 
 #define SERVER_PORT 8080
-#define CLIENT_PORT 8000
 #define BACKLOG_LIMIT 5
 #define LOCALHOST_IP "127.0.0.1"
 #define ADDRESS_FAMILY AF_INET
@@ -50,14 +50,15 @@ int connect_server(int sock_fd){
 	// Set family to IPv4
 	bind_address.sin_family = ADDRESS_FAMILY;
 	// Set port in network byte-order to a non-privileged port (>1023)
-	bind_address.sin_port = htons(CLIENT_PORT);
+	bind_address.sin_port = htons(SERVER_PORT);
 	// Set address to 127.0.0.1 to loopback to same host
 	bind_address.sin_addr.s_addr = inet_addr(LOCALHOST_IP);
 	// Convert to generic socket address format and bind
-	if (!connect(sock_fd, (struct sockaddr *)&bind_address, sizeof(bind_address))){
+	if (!connect(sock_fd, (struct sockaddr*)&bind_address, sizeof(bind_address))){
 		return 0;    // Success
 	}
 	else{
+		printf("%d", errno);
 		return -5;   // Could not connect to the local server
 	}
 }

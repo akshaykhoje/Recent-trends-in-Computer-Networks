@@ -29,6 +29,8 @@ void main(){
 	struct sockaddr_in *client_addr = malloc(sizeof(struct sockaddr_in));
 	int client_addr_len = sizeof(struct sockaddr_in);
 	// BLOCKING routine to accept a client
+	printf("HERE");
+	fflush(stdout);
 	int client_socket = accept_client(self_socket, client_addr, &client_addr_len);
 	if (client_socket<0){
 		printf("\nError when connecting to client. Retry!\n");
@@ -50,7 +52,7 @@ void main(){
 			printf("Connected to Client (%s:%d)", client_addr_ip_str, client_addr_port);
 		}
 	}
-
+	return;
 
 	
 }
