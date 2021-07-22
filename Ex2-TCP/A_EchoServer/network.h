@@ -10,6 +10,7 @@
 #define ADDRESS_FAMILY AF_INET
 #define ADDRESS_BUFFER_SIZE 30
 #define MSG_BUFFER_SIZE 100
+#define TERMINATION_STRING "ENDSESSION"
 
 /*	
 Use BLOCKING sockets (default configuration)
@@ -30,7 +31,7 @@ int make_socket(){
 	return sock_fd;
 }
 
-short check_terminate_msg(char *msg){
+short check_termination_msg(char *msg){
 	return (strcmp(msg, TERMINATION_STRING)==0);
 }
 
