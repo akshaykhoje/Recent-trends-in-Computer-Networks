@@ -29,8 +29,6 @@ void main(){
 	struct sockaddr_in *client_addr = malloc(sizeof(struct sockaddr_in));
 	int client_addr_len = sizeof(struct sockaddr_in);
 	// BLOCKING routine to accept a client
-	printf("HERE");
-	fflush(stdout);
 	int client_socket = accept_client(self_socket, client_addr, &client_addr_len);
 	if (client_socket<0){
 		printf("\nError when connecting to client. Retry!\n");
@@ -52,7 +50,23 @@ void main(){
 			printf("Connected to Client (%s:%d)", client_addr_ip_str, client_addr_port);
 		}
 	}
-	return;
 
-	
+	char *msg_buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
+	int msg_size = 0;
+	do{
+		// BLOCKING routine to wait for a message
+		bzero(msg_buffer, MSG_BUFFER_SIZE);
+		msg_size = read(client_socket, msg_buffer, MSG_BUFFER_SIZE);
+		if (check_termination_msg(msg_buffer)){
+			printf("\nClient terminated connection\n");
+			destroy_socket(client_socket);
+			break;
+		}
+		printf("\nCLIENT said: %s", msg_buffer);
+		msg_size = write(client_socket, msg_buffer, msg_size);
+		printf("\nMessage echoed back\n");
+	}while(1==1);
+
+	destroy_socket(self_socket);
+	return;
 }

@@ -1,6 +1,7 @@
 #include<sys/socket.h>
 #include<arpa/inet.h>
 #include<unistd.h>
+#include<string.h>
 #include<errno.h>
 
 #define SERVER_PORT 8080
@@ -8,12 +9,14 @@
 #define LOCALHOST_IP "127.0.0.1"
 #define ADDRESS_FAMILY AF_INET
 #define ADDRESS_BUFFER_SIZE 30
+#define MSG_BUFFER_SIZE 100
 
 /*	
 Use BLOCKING sockets (default configuration)
 Only one client-connection
 And server only echoes messages
 No need to initiate messages on the server!
+(i.e) Synchronous send/receive
 */
 
 int make_socket(){
@@ -27,7 +30,11 @@ int make_socket(){
 	return sock_fd;
 }
 
-int bind_server_socket(int sock_fd){
+short check_terminate_msg(char *msg){
+	return (strcmp(msg, TERMINATION_STRING)==0);
+}
+
+short bind_server_socket(int sock_fd){
 	struct sockaddr_in bind_address;
 	// Set family to IPv4
 	bind_address.sin_family = ADDRESS_FAMILY;
@@ -44,9 +51,9 @@ int bind_server_socket(int sock_fd){
 	}
 }
 
-// BLOCKING FUNCTION
-int connect_server(int sock_fd){
+short connect_server(int sock_fd){
 	struct sockaddr_in bind_address;
+	bzero((char*)&bind_address, sizeof(bind_address));
 	// Set family to IPv4
 	bind_address.sin_family = ADDRESS_FAMILY;
 	// Set port in network byte-order to a non-privileged port (>1023)
@@ -58,12 +65,11 @@ int connect_server(int sock_fd){
 		return 0;    // Success
 	}
 	else{
-		printf("%d", errno);
 		return -5;   // Could not connect to the local server
 	}
 }
 
-int initiate_listen(int sock_fd){
+short initiate_listen(int sock_fd){
 	if (!listen(sock_fd, BACKLOG_LIMIT)){
 		return 0;    // Success
 	}
