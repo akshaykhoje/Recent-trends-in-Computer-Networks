@@ -56,7 +56,12 @@ void main(){
 	do{
 		// BLOCKING routine to wait for a message
 		bzero(msg_buffer, MSG_BUFFER_SIZE);
-		msg_size = read(client_socket, msg_buffer, MSG_BUFFER_SIZE);;
+		msg_size = read(client_socket, msg_buffer, MSG_BUFFER_SIZE);
+		if (msg_size==0){
+			printf("\nClient shut-down abruptly!\n");
+			destroy_socket(client_socket);
+			break;
+		}
 		// Echo back
 		if (check_termination_init(msg_buffer)){
 			printf("\nClient terminated connection\n");

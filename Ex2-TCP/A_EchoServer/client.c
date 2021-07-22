@@ -12,7 +12,7 @@ void main(){
 	}
 
 	if (connect_server(self_socket) < 0){
-		printf("\nCould not connect to ECHO-Server. Retry!\n");
+		printf("\nCould not connect to ECHO-Server.\nMake sure the server is running!\n");
 		destroy_socket(self_socket);
 		return;
 	}
@@ -22,7 +22,7 @@ void main(){
 
 	char *msg_buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
 	int msg_size = 0;
-	printf("\nDelimit Ping Messages with ';'\nEnter 'ENDSESSION;' to terminate connection\n");
+	printf("\n\nDelimit Ping Messages with ';'\nEnter 'ENDSESSION;' to terminate connection\n");
 	do {
 		bzero(msg_buffer, MSG_BUFFER_SIZE);
 		printf("\nEnter Ping Message: ");
