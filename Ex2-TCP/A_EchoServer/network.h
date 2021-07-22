@@ -1,4 +1,6 @@
 #include<sys/socket.h>
+#include<arpa/inet.h>
+#include<unistd.h>
 
 #define SERVER_PORT 8080
 #define CLIENT_PORT 8000
@@ -72,14 +74,14 @@ int initiate_listen(int sock_fd){
 // BLOCKING FUNCTION
 int accept_client(int sock_fd, struct sockaddr_in *client_addr, int *client_addr_len){
 	// Address of client is registered
-	client_sock_fd = accept(sock_fd, (sockaddr*)client_addr, client_addr_len);
+	int client_sock_fd = accept(sock_fd, (struct sockaddr*)client_addr, client_addr_len);
 	if (client_sock_fd == -1){
 		return -5;   // Did not connect to a client
 	}
-	else if (*client_addr_len > sizeof(struct_sockaddr_in)){
+	else if (*client_addr_len > sizeof(struct sockaddr_in)){
 		*client_addr_len = -1;    // Non-Fatal Warning: Client address was truncated to fit in buffer
 	}
-	return cient_sock_fd;
+	return client_sock_fd;
 }
 
 

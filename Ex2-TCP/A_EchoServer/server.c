@@ -29,7 +29,7 @@ void main(){
 	struct sockaddr_in *client_addr = malloc(sizeof(struct sockaddr_in));
 	int client_addr_len = sizeof(struct sockaddr_in);
 	// BLOCKING routine to accept a client
-	client_socket = accept_client(self_socket, client_addr, &client_addr_len);
+	int client_socket = accept_client(self_socket, client_addr, &client_addr_len);
 	if (client_socket<0){
 		printf("\nError when connecting to client. Retry!\n");
 		destroy_socket(self_socket);
@@ -40,8 +40,9 @@ void main(){
 	}
 	else{
 		char *client_addr_ip_str = (char*)malloc(sizeof(char)*ADDRESS_BUFFER_SIZE);
-		inet_ntop(ADDRESS_FAMILY, client_addr->sin_addr, client_addr_ip_str, ADDRESS_BUFFER_SIZE);
-		client_addr_port = (int)ntohs(client_addr->sin_port);
+		// Alternatively, use inet_ntoa
+		inet_ntop(ADDRESS_FAMILY, (void*)&client_addr->sin_addr, client_addr_ip_str, ADDRESS_BUFFER_SIZE);
+		int client_addr_port = (int)ntohs(client_addr->sin_port);
 		if (client_addr_ip_str == NULL) {
 			printf("Client connected.\nCould not read address\n");
 		}
