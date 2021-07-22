@@ -56,7 +56,7 @@ void main(){
 	do{
 		// BLOCKING routine to wait for a message
 		bzero(msg_buffer, MSG_BUFFER_SIZE);
-		msg_size = read(client_socket, msg_buffer, MSG_BUFFER_SIZE);
+		msg_size = read(client_socket, msg_buffer, MSG_BUFFER_SIZE);;
 		// Echo back
 		if (check_termination_init(msg_buffer)){
 			printf("\nClient terminated connection\n");
@@ -67,7 +67,7 @@ void main(){
 		}
 		printf("\nCLIENT pinged: %s", msg_buffer);
 		msg_size = write(client_socket, msg_buffer, msg_size);
-		printf("\n( Message echoed back )\n");
+		printf("\n(Message echoed back)\n");
 	}while(1==1);
 
 	destroy_socket(self_socket);

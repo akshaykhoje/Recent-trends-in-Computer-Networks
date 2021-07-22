@@ -12,6 +12,7 @@
 #define MSG_BUFFER_SIZE 100
 #define TERMINATION_INIT_STRING "ENDSESSION"
 #define TERMINATION_ACK_STRING "ENDSESSION_ACK"
+#define MSG_DELIMITER ';'
 
 /*	
 Use BLOCKING sockets (default configuration)
@@ -97,7 +98,6 @@ int accept_client(int sock_fd, struct sockaddr_in *client_addr, int *client_addr
 	}
 	return client_sock_fd;
 }
-
 
 void destroy_socket(int sock_fd){
 	close(sock_fd);
