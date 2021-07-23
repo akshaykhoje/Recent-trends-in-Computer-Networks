@@ -12,7 +12,7 @@
 #define LOCALHOST_IP "127.0.0.1"
 #define ADDRESS_FAMILY AF_INET
 #define ADDRESS_BUFFER_SIZE 30
-#define MSG_BUFFER_SIZE 100
+#define MSG_BUFFER_SIZE 20
 #define TERMINATION_INIT_STRING "ENDSESSION"
 #define TERMINATION_ACK_STRING "ENDSESSION_ACK"
 #define FILENOTFOUND_STRING "FILENOTFOUND"
@@ -59,7 +59,6 @@ short bind_server_socket(int sock_fd){
 		return 0;    // Success
 	}
 	else{
-		printf("%d", errno);
 		return -3;   // Could not bind server-socket
 	}
 }

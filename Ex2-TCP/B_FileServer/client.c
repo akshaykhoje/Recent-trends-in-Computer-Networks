@@ -18,12 +18,12 @@ void main(){
 	}
 
 	if (connect_server(self_socket) < 0){
-		printf("\nCould not connect to ECHO-Server.\nMake sure the server is running!\n");
+		printf("\nCould not connect to File-Server.\nMake sure the server is running!\n");
 		destroy_socket(self_socket);
 		return;
 	}
 	else{
-		printf("\nConnected to ECHO-Server");
+		printf("\nConnected to File-Server");
 	}
 
 	char *msg_buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
@@ -32,12 +32,11 @@ void main(){
 	printf("\n\nEnter 'ENDSESSION' to terminate connection\n");
 	do {
 		bzero(msg_buffer, MSG_BUFFER_SIZE);
-		printf("\nEnter File Name: ");
+		printf("\nEnter Filename: ");
 		scanf(" %[^\n]s", msg_buffer);   
 		msg_size = write(self_socket, msg_buffer, MSG_BUFFER_SIZE);
 		if (check_termination_init(msg_buffer)){
 			msg_size = read(self_socket, msg_buffer, MSG_BUFFER_SIZE);
-			printf("\n%s", msg_buffer);
 			// Check if server acknowledged ENDSESSION
 			if (check_termination_ack(msg_buffer)){
 				printf("\nExiting...\n");
@@ -51,6 +50,15 @@ void main(){
 		response = receive_file(msg_buffer, self_socket);
 		if(response==-8){
 			printf("\nCould not create local file\n");
+		}
+		else if(response==-9){
+			printf("\nFile transfer failed unexpectedly\n");
+		}
+		else if(response==-10){
+			printf("File '%s' was not found on server\n", msg_buffer);
+		}
+		else{
+			printf("\nFile downloaded\n");
 		}
 	}while(1==1);
 }

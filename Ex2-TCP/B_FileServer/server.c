@@ -62,6 +62,7 @@ void main(){
 	int response;
 	do{
 		bzero(msg_buffer, MSG_BUFFER_SIZE);
+		printf("\nAwaiting file request...\n");
 		msg_size = read(client_socket, msg_buffer, MSG_BUFFER_SIZE);
 		if (msg_size==0){
 			printf("\nClient shut-down abruptly!\n");
@@ -76,6 +77,7 @@ void main(){
 			break;
 		}
 		printf("\nCLIENT requested file: %s", msg_buffer);
+		fflush(stdout);
 		response = send_file(msg_buffer, client_socket);
 		if(response==-6){
 			printf("\nRequested file NOT FOUND\n");
