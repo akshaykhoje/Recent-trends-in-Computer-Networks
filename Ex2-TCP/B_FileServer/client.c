@@ -58,7 +58,7 @@ void main(){
 			printf("File '%s' was not found on server\n", msg_buffer);
 		}
 		else{
-			printf("File downloaded\n");
+			printf("File downloaded to './downloads/%s'\n", msg_buffer);
 		}
 	}while(1==1);
 }

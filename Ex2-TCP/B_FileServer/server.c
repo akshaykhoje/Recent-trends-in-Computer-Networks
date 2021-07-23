@@ -87,6 +87,9 @@ void main(){
 			printf("\nFile tranfer failed unexepectedly\n");
 			msg_size = write(client_socket, TRANSFERFAIL_STRING, sizeof(TRANSFERFAIL_STRING));
 		}
+		else{
+			printf("\nFile transfered to client\n");
+		}
 	}while(1==1);
 
 	destroy_socket(self_socket);
