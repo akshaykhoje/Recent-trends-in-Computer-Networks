@@ -8,6 +8,7 @@
 
 #define FILE_CHUNK_ACK "FILECHUNKACK"
 #define EOF_STRING "ENDFILEHERE"
+#define PATH_SIZE 100
 
 mode_t get_default_fileperm(){
     mode_t curr_umask = umask(022);
@@ -55,7 +56,11 @@ short send_file(char *filepath, int sock_fd){
 
 
 short receive_file(char *filepath, int sock_fd){
-	int fd_out = open("recv", O_CREAT|O_WRONLY, get_default_fileperm());
+	char *working_dir = (char*)malloc(sizeof(char)*PATH_SIZE);
+	getcwd(working_dir, PATH_SIZE);
+	chdir("downloads");
+	int fd_out = open(filepath, O_CREAT|O_WRONLY, get_default_fileperm());
+	chdir(working_dir);
 	if(fd_out<0){
 		return -8;   // Could not open write-file
 	}
