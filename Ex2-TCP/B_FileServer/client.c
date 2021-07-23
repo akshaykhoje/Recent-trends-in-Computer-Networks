@@ -1,7 +1,13 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-#include "tcp_socket.h"
+#ifndef tcp_socket
+	#include "tcp_socket.h"
+#endif	
+
+#ifndef file_io
+	#include "file_io.h"
+#endif
 
 void main(){
 
@@ -22,22 +28,29 @@ void main(){
 
 	char *msg_buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
 	int msg_size = 0;
-	printf("\n\nDelimit Ping Messages with ';'\nEnter 'ENDSESSION;' to terminate connection\n");
+	int response;
+	printf("\n\nEnter 'ENDSESSION' to terminate connection\n");
 	do {
 		bzero(msg_buffer, MSG_BUFFER_SIZE);
-		printf("\nEnter Ping Message: ");
-		scanf(" %[^;]s", msg_buffer);
-		// Consume the last newline character from read-buffer
-		getchar();   
+		printf("\nEnter File Name: ");
+		scanf(" %[^\n]s", msg_buffer);   
 		msg_size = write(self_socket, msg_buffer, MSG_BUFFER_SIZE);
-		// Reading back
-		bzero(msg_buffer, MSG_BUFFER_SIZE);
-		msg_size = read(self_socket, msg_buffer, MSG_BUFFER_SIZE);
-		// Check if server acknowledged ENDSESSION
-		if (check_termination_ack(msg_buffer)){
-			printf("\nExiting...\n");
-			break;
+		if (check_termination_init(msg_buffer)){
+			msg_size = read(self_socket, msg_buffer, MSG_BUFFER_SIZE);
+			printf("\n%s", msg_buffer);
+			// Check if server acknowledged ENDSESSION
+			if (check_termination_ack(msg_buffer)){
+				printf("\nExiting...\n");
+				break;
+			}
+			else{
+				printf("\nServer did not acknowledge termination. Retry!\n");
+				continue;
+			}
 		}
-		printf("SERVER echoed: %s\n", msg_buffer, MSG_BUFFER_SIZE);
+		response = receive_file(msg_buffer, self_socket);
+		if(response==-8){
+			printf("\nCould not create local file\n");
+		}
 	}while(1==1);
 }

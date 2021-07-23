@@ -1,3 +1,6 @@
+#ifndef tcp_socket
+#define tcp_socket
+
 #include<sys/socket.h>
 #include<arpa/inet.h>
 #include<unistd.h>
@@ -12,6 +15,8 @@
 #define MSG_BUFFER_SIZE 100
 #define TERMINATION_INIT_STRING "ENDSESSION"
 #define TERMINATION_ACK_STRING "ENDSESSION_ACK"
+#define FILENOTFOUND_STRING "FILENOTFOUND"
+#define TRANSFERFAIL_STRING "TRANFERFAILED"
 #define MSG_DELIMITER ';'
 
 /*	
@@ -102,3 +107,5 @@ int accept_client(int sock_fd, struct sockaddr_in *client_addr, int *client_addr
 void destroy_socket(int sock_fd){
 	close(sock_fd);
 }
+
+#endif

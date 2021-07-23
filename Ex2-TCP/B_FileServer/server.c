@@ -1,7 +1,13 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-#include "tcp_socket.h"
+#ifndef tcp_socket
+	#include "tcp_socket.h"
+#endif	
+
+#ifndef file_io
+	#include "file_io.h"
+#endif
 
 void main(){
 	
@@ -53,8 +59,8 @@ void main(){
 
 	char *msg_buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
 	int msg_size = 0;
+	int response;
 	do{
-		// BLOCKING routine to wait for a message
 		bzero(msg_buffer, MSG_BUFFER_SIZE);
 		msg_size = read(client_socket, msg_buffer, MSG_BUFFER_SIZE);
 		if (msg_size==0){
@@ -62,7 +68,6 @@ void main(){
 			destroy_socket(client_socket);
 			break;
 		}
-		// Echo back
 		if (check_termination_init(msg_buffer)){
 			printf("\nClient terminated connection\n");
 			bzero(msg_buffer, MSG_BUFFER_SIZE);
@@ -70,9 +75,16 @@ void main(){
 			destroy_socket(client_socket);
 			break;
 		}
-		printf("\nCLIENT pinged: %s", msg_buffer);
-		msg_size = write(client_socket, msg_buffer, msg_size);
-		printf("\n(Message echoed back)\n");
+		printf("\nCLIENT requested file: %s", msg_buffer);
+		response = send_file(msg_buffer, client_socket);
+		if(response==-6){
+			printf("\nRequested file NOT FOUND\n");
+			msg_size = write(client_socket, FILENOTFOUND_STRING, sizeof(FILENOTFOUND_STRING));
+		}		
+		else if(response==-7){
+			printf("\nFile tranfer failed unexepectedly\n");
+			msg_size = write(client_socket, TRANSFERFAIL_STRING, sizeof(TRANSFERFAIL_STRING));
+		}
 	}while(1==1);
 
 	destroy_socket(self_socket);

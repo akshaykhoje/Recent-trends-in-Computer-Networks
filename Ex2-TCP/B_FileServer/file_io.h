@@ -1,3 +1,6 @@
+#ifndef file_io
+#define file_io
+
 #include<fcntl.h>
 
 #include "tcp_socket.h"
@@ -13,13 +16,13 @@ short check_eof(char *msg){
 	return (strcmp(msg, EOF_STRING)==0);
 }
 
-void send_file(char *filepath, int sock_fd){
+short send_file(char *filepath, int sock_fd){
 	int fd_in = open(filepath, O_RDONLY);
 	if (fd_in<0){
 		return -6;   // Could not open read-file
 	}
-	char *data = (char*)malloc(sizeof(char)*FILE_CHUNK_SIZE);
-	int read_size = read(fd, buffer, MSG_BUFFER_SIZE);
+	char *data = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
+	int read_size = read(fd_in, data, MSG_BUFFER_SIZE);
 	int write_size = 0;
 	do{
 		write_size = write(sock_fd, data, read_size);
@@ -32,16 +35,23 @@ void send_file(char *filepath, int sock_fd){
 	}while(read_size!=0);
 	write_size = write(sock_fd, EOF_STRING, sizeof(EOF_STRING));
 	close(fd_in);
+	return 0;
 }
 
 
-void receive_file(char *filepath, int sock_fd){
+short receive_file(char *filepath, int sock_fd){
 	int fd_out = open(filepath, O_WRONLY);
 	if(fd_out<0){
 		return -8;   // Could not open write-file
 	}
-	char *data = (char*)malloc(sizeof(char)*);
-	int read_size = read(sock_fd, buffer, MSG_BUFFER_SIZE);
+	char *buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
+	// Block until filename is read
+	int read_size = 0;
+	do{
+		read_size = recv(sock_fd, buffer, MSG_BUFFER_SIZE, MSG_PEEK);			
+	}while(strcmp(buffer, filepath)==0);
+	// Start file-transfer
+	read_size = read(sock_fd, buffer, MSG_BUFFER_SIZE);
 	int write_size = 0;
 	do{
 		if (check_eof(buffer)) {
@@ -58,4 +68,7 @@ void receive_file(char *filepath, int sock_fd){
 		read_size = read(sock_fd, buffer, MSG_BUFFER_SIZE);
 	}while(1==1);
 	close(fd_out);
+	return 0;
 }
+
+#endif
