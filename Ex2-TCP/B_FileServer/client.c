@@ -17,7 +17,10 @@ void main(){
 		return;
 	}
 
-	if (connect_server(self_socket) < 0){
+	char *server_ip = (char*)malloc(sizeof(char)*IP_STRING_LEN);
+	printf("\nEnter File-Server IP Address: ");
+	scanf(" %s", server_ip);
+	if (connect_server(self_socket, server_ip) < 0){
 		printf("\nCould not connect to File-Server.\nMake sure the server is running!\n");
 		destroy_socket(self_socket);
 		return;
