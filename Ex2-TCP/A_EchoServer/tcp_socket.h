@@ -10,6 +10,7 @@
 #define ADDRESS_FAMILY AF_INET
 #define ADDRESS_BUFFER_SIZE 30
 #define MSG_BUFFER_SIZE 100
+#define IP_STRING_LEN 24	
 #define TERMINATION_INIT_STRING "ENDSESSION"
 #define TERMINATION_ACK_STRING "ENDSESSION_ACK"
 #define MSG_DELIMITER ';'
@@ -59,15 +60,20 @@ short bind_server_socket(int sock_fd){
 	}
 }
 
-short connect_server(int sock_fd){
+short connect_server(int sock_fd, char *server_ip){
 	struct sockaddr_in bind_address;
 	bzero((char*)&bind_address, sizeof(bind_address));
 	// Set family to IPv4
 	bind_address.sin_family = ADDRESS_FAMILY;
 	// Set port in network byte-order to a non-privileged port (>1023)
 	bind_address.sin_port = htons(SERVER_PORT);
-	// Set address to 127.0.0.1 to loopback to same host
-	bind_address.sin_addr.s_addr = inet_addr(LOCALHOST_IP);
+	// Set address to server IP or 127.0.0.1 to loopback to same host
+	if (server_ip == NULL){
+		bind_address.sin_addr.s_addr = inet_addr(LOCALHOST_IP);
+	}
+	else{
+		bind_address.sin_addr.s_addr = inet_addr(server_ip);
+	}
 	// Convert to generic socket address format and bind
 	if (!connect(sock_fd, (struct sockaddr*)&bind_address, sizeof(bind_address))){
 		return 0;    // Success
