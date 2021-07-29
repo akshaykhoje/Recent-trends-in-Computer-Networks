@@ -9,6 +9,11 @@
 	#include "msg_io.h"
 #endif
 
+#ifndef client_list
+	#include "client_list.h"
+#endif
+
+
 
 void main(){
 	
