@@ -37,18 +37,18 @@ ssize_t receive_message(int socket, char *msg, struct sockaddr_in *sender_addr, 
 	return msg_size
 }
 
-ssize_t send_message(int socket, char *msg, struct sockaddr_in *destn_addr, int *destn_addr_len){
+ssize_t send_message(int socket, char *msg, struct sockaddr_in *destn_addr, int destn_addr_len){
 	// Using MSG_CONFIRM to prevent ARP reprobing, since this is a reply message
-	int msg_size = sendto(socket, msg, MSG_BUFFER_SIZE, 0, MSG_CONFIRM, (struct sockaddr*)sender_addr, sender_addr_len);
+	int msg_size = sendto(socket, msg, MSG_BUFFER_SIZE, 0, MSG_CONFIRM, (struct sockaddr*)destn_addr, destn_addr_len);
 	if(msg_size == -1){
 		return -6;    // Couldn't send message
 	}
 	return msg_size;
 }
 
-ssize_t send_reply(int socket, char *msg, struct sockaddr_in *destn_addr, int *destn_addr_len){
+ssize_t send_reply(int socket, char *msg, struct sockaddr_in *destn_addr, int destn_addr_len){
 	// Using MSG_CONFIRM to prevent ARP reprobing, since this is a reply message
-	int msg_size = sendto(socket, msg, MSG_BUFFER_SIZE, 0, MSG_CONFIRM, (struct sockaddr*)sender_addr, sender_addr_len);
+	int msg_size = sendto(socket, msg, MSG_BUFFER_SIZE, 0, MSG_CONFIRM, (struct sockaddr*)destn_addr, destn_addr_len);
 	if(msg_size == -1){
 		return -7;    // Couldn't send reply
 	}

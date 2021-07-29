@@ -26,7 +26,7 @@ void main(){
 	else{
 		printf("\nServer waiting for client messages from all local interfaces...\n");
 	}
-	
+
 	// Keep track of all server sockets.
 	int num_sockets = 1;
 	int *server_sockets = (int*)malloc(sizeof(int)*num_sockets);
@@ -35,6 +35,8 @@ void main(){
 	// To store sender-client address
 	struct sockaddr_in *client_addr = malloc(sizeof(struct sockaddr_in));
 	int client_addr_len = sizeof(struct sockaddr_in);
+	char *client_addr_ip_str = (char*)malloc(sizeof(char)*ADDRESS_BUFFER_SIZE);
+	int client_addr_port;
 
 	char *msg_buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
 	fd_set readable_fds;
@@ -65,10 +67,9 @@ void main(){
 				printf("Message received from Client.\nCould not read address\n");
 			}
 			else{
-				char *client_addr_ip_str = (char*)malloc(sizeof(char)*ADDRESS_BUFFER_SIZE);
 				// Alternatively, use inet_ntoa
 				inet_ntop(ADDRESS_FAMILY, (void*)&client_addr->sin_addr, client_addr_ip_str, ADDRESS_BUFFER_SIZE);
-				int client_addr_port = (int)ntohs(client_addr->sin_port);
+				client_addr_port = (int)ntohs(client_addr->sin_port);
 				if (client_addr_ip_str == NULL) {
 					printf("Message received from Client.\nCould not read address\n");
 				}
@@ -76,7 +77,7 @@ void main(){
 					printf("Message received from Client (%s:%d)\n", client_addr_ip_str, client_addr_port);
 					// Echoing back
 					printf("\n%s", msg_buffer);
-					msg_size = send_reply(self_socket, msg_buffer, client_addr, &client_addr_len);
+					msg_size = send_reply(self_socket, msg_buffer, client_addr, client_addr_len);
 					printf("\n(Message echoed back)\n");
 				}
 			}

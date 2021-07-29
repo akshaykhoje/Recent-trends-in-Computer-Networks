@@ -36,58 +36,16 @@ int make_socket(){
 	return sock_fd;
 }
 
-short bind_server_socket(int sock_fd){
-	struct sockaddr_in bind_address;
+struct sockaddr_in wrap_address(char *ip_address, int port){
+	struct sockaddr_in address;
+	bzero((char*)&address, sizeof(address));
 	// Set family to IPv4
-	bind_address.sin_family = ADDRESS_FAMILY;
+	address.sin_family = ADDRESS_FAMILY;
 	// Set port in network byte-order to a non-privileged port (>1023)
-	bind_address.sin_port = htons(SERVER_PORT);
-	// Set address to 0.0.0.0 to connect to bind to all local interfaces
-	bind_address.sin_addr.s_addr = htonl(INADDR_ANY);
-	// Convert to generic socket address format and bind
-	if (!bind(sock_fd, (struct sockaddr *)&bind_address, sizeof(bind_address))){
-		return 0;    // Success
-	}
-	else{
-		return -3;   // Could not bind server-socket
-	}
-}
-
-short connect_server(int sock_fd, char *server_ip){
-	struct sockaddr_in bind_address;
-	bzero((char*)&bind_address, sizeof(bind_address));
-	// Set family to IPv4
-	bind_address.sin_family = ADDRESS_FAMILY;
-	// Set port in network byte-order to a non-privileged port (>1023)
-	bind_address.sin_port = htons(SERVER_PORT);
-	// Set address to server IP or 127.0.0.1 to loopback to same host
-	if (server_ip == NULL){
-		bind_address.sin_addr.s_addr = inet_addr(LOCALHOST_IP);
-	}
-	else{
-		bind_address.sin_addr.s_addr = inet_addr(server_ip);
-	}
-	
-	// Convert to generic socket address format and bind
-	if (!connect(sock_fd, (struct sockaddr*)&bind_address, sizeof(bind_address))){
-		return 0;    // Success
-	}
-	else{
-		return -5;   // Could not connect to the local server
-	}
-}
-
-// BLOCKING FUNCTION
-int accept_client(int sock_fd, struct sockaddr_in *client_addr, int *client_addr_len){
-	// Address of client is registered
-	int client_sock_fd = accept(sock_fd, (struct sockaddr*)client_addr, client_addr_len);
-	if (client_sock_fd == -1){
-		return -5;   // Did not connect to a client
-	}
-	else if (*client_addr_len > sizeof(struct sockaddr_in)){
-		*client_addr_len = -1;    // Non-Fatal Warning: Client address was truncated to fit in buffer
-	}
-	return client_sock_fd;
+	address.sin_port = htons(port);
+	// Set the ip address in byte format
+	address.sin_addr.s_addr = inet_addr(ip_address);
+	return address
 }
 
 void destroy_socket(int sock_fd){
