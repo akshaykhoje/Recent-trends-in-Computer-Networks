@@ -44,7 +44,7 @@ void main(){
 		// BLOCK till some client sends message
 		printf("\nServer waiting for client messages from all local interfaces...\n");
 		fflush(stdout);
-		/*
+		
 		response = wait_for_message(server_sockets, num_sockets, &readable_fds);
 		printf("%d", response);
 		if(response == -9){
@@ -54,16 +54,16 @@ void main(){
 		else if(response == -8){
 			printf("\nError occurred when monitoring socket for messages\nRetry!\n");
 		}
-		*/
+
 		// Handle all available readable descriptors
 		for(int read_idx=0; read_idx<num_sockets; read_idx++){
 			read_fd = *(server_sockets+read_idx);
-			/*
+		
 			if (FD_ISSET(read_fd, &readable_fds)==0){
 				// This socket is not readable
 				continue;
 			}
-			*/
+			
 			msg_size = receive_message(self_socket, msg_buffer, client_addr, &client_addr_len);
 			printf("%s", msg_buffer);
 			if (msg_size==0){
