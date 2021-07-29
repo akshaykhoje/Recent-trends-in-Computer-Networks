@@ -44,7 +44,6 @@ void main(){
 		// BLOCK till some client sends message
 		printf("\nServer waiting for client messages from all local interfaces...\n");
 		fflush(stdout);
-		/*
 		response = wait_for_message(server_sockets, num_sockets, &readable_fds);
 		printf("%d", response);
 		if(response == -9){
@@ -54,38 +53,35 @@ void main(){
 		else if(response == -8){
 			printf("\nError occurred when monitoring socket for messages\nRetry!\n");
 		}
-		*/
+
 		// Handle all available readable descriptors
 		for(int read_idx=0; read_idx<num_sockets; read_idx++){
 			read_fd = *(server_sockets+read_idx);
-			/*
 			if (FD_ISSET(read_fd, &readable_fds)==0){
 				// This socket is not readable
 				continue;
 			}
-			*/
 			msg_size = receive_message(self_socket, msg_buffer, client_addr, &client_addr_len);
-			printf("%s", msg_buffer);
 			if (msg_size==0){
 				printf("\nEmpty message\n");
 			}
 			else if(client_addr_len == -1){
-				printf("\nMessage received from Client.\nCould not read address\n");
+				printf("Message received from Client.\nCould not read address\n");
 			}
 			else{
 				// Alternatively, use inet_ntoa
 				inet_ntop(ADDRESS_FAMILY, (void*)&client_addr->sin_addr, client_addr_ip_str, ADDRESS_BUFFER_SIZE);
 				client_addr_port = (int)ntohs(client_addr->sin_port);
 				if (client_addr_ip_str == NULL) {
-					printf("\nMessage received from Client.\nCould not read address\n");
+					printf("Message received from Client.\nCould not read address\n");
 				}
 				else{
-					printf("\nMessage received from Client (%s:%d)\n", client_addr_ip_str, client_addr_port);
+					printf("Message received from Client (%s:%d)\n", client_addr_ip_str, client_addr_port);
+					// Echoing back
+					printf("\n%s", msg_buffer);
+					msg_size = send_reply(self_socket, msg_buffer, client_addr, client_addr_len);
+					printf("\n(Message echoed back)\n");
 				}
-				// Echoing back
-				printf("\n%s", msg_buffer);
-				msg_size = send_reply(self_socket, msg_buffer, client_addr, client_addr_len);
-				printf("\n(Message echoed back)\n");
 			}
 		}
 	}while(1==1);

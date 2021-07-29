@@ -7,7 +7,7 @@
 #include<string.h>
 #include<errno.h>
 
-#define SERVER_PORT 8080
+#define SERVER_PORT 8088
 #define LOCALHOST_IP "127.0.0.1"
 #define ADDRESS_FAMILY AF_INET
 #define ADDRESS_BUFFER_SIZE 30

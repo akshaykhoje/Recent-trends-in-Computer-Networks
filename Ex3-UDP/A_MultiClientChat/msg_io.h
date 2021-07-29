@@ -30,9 +30,9 @@ int wait_for_message(int *server_fds, int num_fds, fd_set *avl_fds){
 	return avl_fds_count;
 }
 
-ssize_t receive_message(int socket, char *msg, struct sockaddr_in *sender_addr, int *sender_addr_len){
-	int addr_buffer_size = sizeof(sender_addr);
-	int msg_size = recvfrom(socket, msg, MSG_BUFFER_SIZE, 0, (struct sockaddr*)sender_addr, sender_addr_len);
+ssize_t receive_message(int socket, char *msg_buffer, struct sockaddr_in *sender_addr, int *sender_addr_len){
+	int addr_buffer_size = sizeof(struct sockaddr_in);
+	int msg_size = recvfrom(socket, msg_buffer, MSG_BUFFER_SIZE, MSG_WAITALL, (struct sockaddr*)sender_addr, sender_addr_len);
 	if (*sender_addr_len > addr_buffer_size){
 		*sender_addr_len = -1;  // Warning: Client address was truncated to fit in buffer
 	}
