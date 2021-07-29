@@ -55,13 +55,15 @@ void main(){
 		}
 
 		// Handle all available readable descriptors
-		for(int read_idx=0; read_idx<response; read_idx++){
-			read_fd = *(readable_fds+read_idx);
+		for(int read_idx=0; read_idx<num_sockets; read_idx++){
+			read_fd = *(server_sockets+read_idx);
+			if (FD_ISSET(read_fd, &readable_fds)==0){
+				// This socket is not readable
+				continue;
+			}
 			msg_size = receive_message(self_socket, msg_buffer, client_addr, &client_addr_len);
 			if (msg_size==0){
-				printf("\nClient shut-down abruptly!\n");
-				destroy_socket(client_socket);
-				break;
+				printf("\nEmpty message\n");
 			}
 			else if(client_addr_len == -1){
 				printf("Message received from Client.\nCould not read address\n");
