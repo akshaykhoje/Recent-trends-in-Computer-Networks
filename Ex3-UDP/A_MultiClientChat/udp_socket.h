@@ -16,6 +16,7 @@
 #define TERMINATION_INIT_STRING "ENDSESSION"
 #define TERMINATION_ACK_STRING "ENDSESSION_ACK"
 #define MSG_DELIMITER ';'
+#define MSG_WAIT_TIMEOUT 10
 
 /*	
 Use BLOCKING sockets (default configuration)

@@ -1,7 +1,32 @@
 #ifndef msg_io
 #define msg_io 
 
+#include<
+
 #include "udp_socket.h"
+
+struct timeval prepare_time_structure(int duration_sec, int duration_usec){
+	struct timeval time;
+	time.tv_sec = duration_sec;
+	time.tv_usec = duration_usec;
+	return time;
+}
+
+int wait_for_message(int *server_fds, int num_fds, fd_set *avl_fds){
+	fd_set read_fds;
+	FD_ZERO(&fd_set);
+	for(int i=0;i<num_fds;i++){
+		FD_SET(*(server_fds+0), &fd_set);
+	}
+	int avl_fds_count = select(num_fds, &read_fds, NULL, NULL, &prepare_time_structure(MSG_WAIT_TIMEOUT, 0));
+	if(avl_fds_count==-1){
+		return -8;    // Error when waiting for socket
+	}
+	else ifa(avl_fds_count==0){
+		return -9;    // Timed-out when waiting for message
+	}
+	return avl_fds_count;
+}
 
 ssize_t receive_message(int socket, char *msg, struct sockaddr_in *sender_addr, int *sender_addr_len){
 	int addr_buffer_size = sizeof(sender_addr)
