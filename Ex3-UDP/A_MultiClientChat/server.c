@@ -48,11 +48,9 @@ void main(){
 	int client_id;
 	do{
 		// BLOCK till some client sends message
-		printf("\nServer waiting for client messages from all local interfaces...\n");
-		fflush(stdout);
+		printf("\nServer waiting for client messages from all local interfaces...\n\n");
 		
 		response = wait_for_message(server_sockets, num_sockets, &readable_fds);
-		printf("%d", response);
 		if(response == -9){
 			printf("\nTimed out when waiting for messages\nExiting...\n");
 			break;
@@ -71,7 +69,6 @@ void main(){
 			}
 			
 			msg_size = receive_message(self_socket, msg_buffer, client_addr, &client_addr_len);
-			printf("%s", msg_buffer);
 			if (msg_size==0){
 				printf("\nEmpty message\n");
 			}
