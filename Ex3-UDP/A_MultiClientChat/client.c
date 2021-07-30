@@ -41,6 +41,10 @@ void main(){
 		bzero(msg_buffer, MSG_BUFFER_SIZE);
 		msg_size = receive_message(self_socket, msg_buffer, source_addr, &source_addr_len);
 		printf("SERVER echoed: %s\n", msg_buffer, MSG_BUFFER_SIZE);
+		if(strcmp(msg_buffer, SERVER_REJECT_STRING)==0){
+			printf("Exiting...");
+			break;
+		}
 	}while(1==1);
 
 	destroy_socket(self_socket);

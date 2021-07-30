@@ -55,7 +55,7 @@ void main(){
 		printf("%d", response);
 		if(response == -9){
 			printf("\nTimed out when waiting for messages\nExiting...\n");
-			return;
+			break;
 		}
 		else if(response == -8){
 			printf("\nError occurred when monitoring socket for messages\nRetry!\n");
@@ -89,7 +89,8 @@ void main(){
 				else{
 					client_id = find_or_add_client(client_addr, known_clients);
 					if(client_id==-11){
-						printf("\nNew client rejected. Client limit reached!\n");
+						printf("\nNew client rejected. Message sent. Client limit reached!\n");
+						msg_size = send_reply(self_socket, SERVER_REJECT_STRING, client_addr, client_addr_len);
 						continue;
 					}
 					printf("\nMessage received from Client-%c (%s:%d)", (65+client_id), client_addr_ip_str, client_addr_port);
