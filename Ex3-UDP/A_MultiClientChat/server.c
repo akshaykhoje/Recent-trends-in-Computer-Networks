@@ -10,10 +10,8 @@
 #endif
 
 #ifndef client_list
-	#include "client_list.h"
+	#include "ClientList.h"
 #endif
-
-
 
 void main(){
 	
@@ -34,6 +32,8 @@ void main(){
 	int *server_sockets = (int*)malloc(sizeof(int)*num_sockets);
 	*(server_sockets+0) = self_socket;
 
+	// To keep track of known clients
+	ClientList *known_clients = make_empty_client_list();
 	// To store sender-client address
 	struct sockaddr_in *client_addr = malloc(sizeof(struct sockaddr_in));
 	int client_addr_len = sizeof(struct sockaddr_in);
@@ -45,6 +45,7 @@ void main(){
 	int msg_size = 0;
 	int response;
 	int read_fd;
+	int client_id;
 	do{
 		// BLOCK till some client sends message
 		printf("\nServer waiting for client messages from all local interfaces...\n");
@@ -83,9 +84,15 @@ void main(){
 				client_addr_port = (int)ntohs(client_addr->sin_port);
 				if (client_addr_ip_str == NULL) {
 					printf("\nMessage received from Client.\nCould not read address\n");
+					continue;
 				}
 				else{
-					printf("\nMessage received from Client (%s:%d)\n", client_addr_ip_str, client_addr_port);
+					client_id = find_or_add_client(client_addr, known_clients);
+					if(client_id==-11){
+						printf("\nNew client rejected. Client limit reached!\n");
+						continue;
+					}
+					printf("\nMessage received from Client-%c (%s:%d)", (65+client_id), client_addr_ip_str, client_addr_port);
 				}
 				// Echoing back
 				printf("\n%s", msg_buffer);
