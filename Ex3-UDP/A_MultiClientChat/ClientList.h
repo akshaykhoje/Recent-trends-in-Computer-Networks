@@ -57,16 +57,16 @@ int find_or_add_client(struct sockaddr_in *client_addr, ClientList *clients){
 }
 
 
-short remove_client(struct sockaddr_in client_addr, ClientList *clients){
-	int search_ip = client_addr.sin_addr.s_addr;
-	int search_port = client_addr.sin_port;
+short remove_client(struct sockaddr_in *client_addr, ClientList *clients){
+	int search_ip = (client_addr->sin_addr).s_addr;
+	int search_port = client_addr->sin_port;
 	int first_empty = -1;
 	for(int i=0;i<clients->count;i++){
 		if( *(clients->ips+i)==search_ip && *(clients->ports+i)==search_port){
 			*(clients->ips+i) = -1;
 			*(clients->ports+i)= -1;
 			clients->count--;
-			return 0;  // Removed
+			return i;  // Removed
 		}
 	}
 	return -1;   // Not found

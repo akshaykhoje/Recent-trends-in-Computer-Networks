@@ -29,7 +29,7 @@ void main(){
 
 	char *msg_buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
 	int msg_size = 0;
-	printf("\n\nDelimit Ping Messages with ';'\nEnter 'ENDSESSION;' to terminate connection\n");
+	printf("\n\nDelimit Ping Messages with ';'\nEnter 'FORGETCLIENT;' to terminate connection\n");
 	do {
 		bzero(msg_buffer, MSG_BUFFER_SIZE);
 		printf("\nEnter Ping Message: ");
@@ -42,6 +42,10 @@ void main(){
 		msg_size = receive_message(self_socket, msg_buffer, source_addr, &source_addr_len);
 		if(strcmp(msg_buffer, SERVER_REJECT_STRING)==0){
 			printf("\nServer is busy. Exiting...\n");
+			break;
+		}
+		else if(strcmp(msg_buffer, TERMINATION_ACK_STRING)==0){
+			printf("\nExiting...\n");
 			break;
 		}
 		printf("SERVER echoed: %s\n", msg_buffer, MSG_BUFFER_SIZE);

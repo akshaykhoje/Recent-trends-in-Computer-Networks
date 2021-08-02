@@ -48,6 +48,7 @@ void main(){
 	int client_id;
 	do{
 		// BLOCK till some client sends message
+		printf("\n---------------------------------------------------------------");
 		printf("\nServer waiting for client messages from all local interfaces...\n\n");
 		
 		response = wait_for_message(server_sockets, num_sockets, &readable_fds);
@@ -86,8 +87,14 @@ void main(){
 				else{
 					client_id = find_or_add_client(client_addr, known_clients);
 					if(client_id==-11){
-						printf("\nNew client rejected. Message sent. Client limit reached!\n");
+						printf("\nNew client rejected and acknowledged. Client limit reached!\n");
 						msg_size = send_reply(self_socket, SERVER_REJECT_STRING, client_addr, client_addr_len);
+						continue;
+					}
+					else if(strcmp(msg_buffer, TERMINATION_INIT_STRING)==0){
+						client_id = remove_client(client_addr, known_clients);
+						msg_size = send_reply(self_socket, TERMINATION_ACK_STRING, client_addr, client_addr_len);
+						printf("\nClient-%c (%s:%d) Removed from known clients\n", (65+client_id), client_addr_ip_str, client_addr_port);
 						continue;
 					}
 					printf("\nMessage received from Client-%c (%s:%d)", (65+client_id), client_addr_ip_str, client_addr_port);
