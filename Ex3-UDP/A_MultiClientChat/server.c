@@ -97,12 +97,16 @@ void main(){
 						printf("\nClient-%c (%s:%d) Removed from known clients\n", (65+client_id), client_addr_ip_str, client_addr_port);
 						continue;
 					}
-					printf("\nMessage received from Client-%c (%s:%d)", (65+client_id), client_addr_ip_str, client_addr_port);
+					printf("\nMessage received from \nClient-%c (%s:%d): ", (65+client_id), client_addr_ip_str, client_addr_port);
 				}
-				// Echoing back
-				printf("\n%s", msg_buffer);
+				printf("%s", msg_buffer);
+				// Replying back
+				bzero(msg_buffer, MSG_BUFFER_SIZE);
+				printf("\nEnter Reply: ");
+				scanf(" %[^;]s", msg_buffer);
+				// Consume the last newline character from read-buffer
+				getchar();   
 				msg_size = send_reply(self_socket, msg_buffer, client_addr, client_addr_len);
-				printf("\n(Message echoed back)\n");
 			}
 		}
 	}while(1==1);
