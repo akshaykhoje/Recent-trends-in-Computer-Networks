@@ -48,7 +48,7 @@ void main(){
 			printf("\nExiting...\n");
 			break;
 		}
-		printf("SERVER echoed: %s\n", msg_buffer, MSG_BUFFER_SIZE);
+		printf("SERVER replied: %s\n", msg_buffer, MSG_BUFFER_SIZE);
 	}while(1==1);
 
 	destroy_socket(self_socket);
