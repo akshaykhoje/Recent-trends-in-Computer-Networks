@@ -46,7 +46,41 @@ void main(){
 	int response;
 	int read_fd;
 	int client_id;
+
+	char *broadcastIP = "255.255.255.255";  
+	int broadcastPort = 33333;
+	int broadcastPermission = 1;
+	struct sockaddr_in broadcastAddr;     
+	char *sendString = "Broadcast, hello";          
+	int sendStringLen; 
+	int sock;
+
 	do{
+
+		if ((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0){
+			fprintf(stderr, "socket error");
+				exit(1);
+		}
+
+		if (setsockopt(sock, SOL_SOCKET, SO_BROADCAST, (void *) &broadcastPermission,sizeof(broadcastPermission)) < 0){
+			fprintf(stderr, "setsockopt error");
+			exit(1);
+		}
+
+		/* Construct local address structure */
+		memset(&broadcastAddr, 0, sizeof(broadcastAddr));   
+		broadcastAddr.sin_family = AF_INET;                 
+		broadcastAddr.sin_addr.s_addr = inet_addr(broadcastIP);
+		broadcastAddr.sin_port = htons(broadcastPort);   
+		sendStringLen = strlen(sendString);  
+
+		/* Broadcast sendString in datagram to clients */
+		if (sendto(sock, sendString, sendStringLen, 0, (struct sockaddr *)&broadcastAddr, sizeof(broadcastAddr)) != sendStringLen){
+			fprintf(stderr, "sendto error");
+			exit(1);
+		}
+		printf("\nBroadcasted");
+
 		// BLOCK till some client sends message
 		printf("\n---------------------------------------------------------------");
 		printf("\nServer waiting for client messages from all local interfaces...\n\n");
@@ -54,7 +88,7 @@ void main(){
 		response = wait_for_message(server_sockets, num_sockets, &readable_fds);
 		if(response == -9){
 			printf("\nTimed out when waiting for messages\nExiting...\n");
-			break;
+			//break;
 		}
 		else if(response == -8){
 			printf("\nError occurred when monitoring socket for messages\nRetry!\n");
