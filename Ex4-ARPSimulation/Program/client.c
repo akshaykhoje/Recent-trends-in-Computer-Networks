@@ -16,6 +16,14 @@ void main(){
 		return;
 	}
 
+	char *self_mac = (char*)malloc(sizeof(char)*MAC_ADDRESS_SIZE);
+	char *self_ip = (char*)malloc(sizeof(char)*IP_ADDRESS_SIZE);
+	// Store own MAC and IP
+	printf("\n\nEnter Own MAC Address: ");
+	scanf(" %s", self_mac);
+	printf("Enter Own IP Address: ");
+	scanf(" %s", self_ip);
+
 	char *server_ip = (char*)malloc(sizeof(char)*IP_ADDRESS_SIZE);
 	printf("\nEnter Host-IP Address: ");
 	scanf(" %s", server_ip);
@@ -28,15 +36,6 @@ void main(){
 		printf("\nConnected to Host");
 	}
 
-	char *self_mac = (char*)malloc(sizeof(char)*MAC_ADDRESS_SIZE);
-	char *self_ip = (char*)malloc(sizeof(char)*IP_ADDRESS_SIZE);
-	char *find_mac = (char*)malloc(sizeof(char)*MAC_ADDRESS_SIZE);
-	char *find_ip = (char*)malloc(sizeof(char)*IP_ADDRESS_SIZE);
-	// Store own MAC and IP
-	printf("\n\nEnter Own MAC Address: ");
-	scanf(" %s", self_mac);
-	printf("Enter Own IP Address: ");
-	scanf(" %s", self_ip);
 	// Allocate message memory
 	char *msg_buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
 	char *arp_packet_string;
