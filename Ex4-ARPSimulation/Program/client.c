@@ -1,7 +1,12 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-#include "tcp_socket.h"
+#ifndef tcp_socket
+	#include "tcp_socket.h"
+#endif
+#ifndef ARP_Packet_h
+	#include "ARP_Packet.h"
+#endif
 
 void main(){
 
@@ -23,11 +28,31 @@ void main(){
 		printf("\nConnected to Host");
 	}
 
+	char *self_mac = (char*)malloc(sizeof(char)*MAC_ADDRESS_SIZE);
+	char *self_ip = (char*)malloc(sizeof(char)*IP_ADDRESS_SIZE);
+	char *find_mac = (char*)malloc(sizeof(char)*MAC_ADDRESS_SIZE);
+	char *find_ip = (char*)malloc(sizeof(char)*IP_ADDRESS_SIZE);
+	// Store own MAC and IP
+	printf("\nEnter Own MAC Address: ");
+	scanf(" %s", self_mac);
+	printf("Enter Own IP Address: ");
+	scanf(" %s", self_ip);
+
 	char *msg_buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
 	int msg_size = 0;
 	bzero(msg_buffer, MSG_BUFFER_SIZE);
 	msg_size = read(self_socket, msg_buffer, MSG_BUFFER_SIZE);
-	printf("\n%s", msg_buffer);
+	printf("\nGREAT");
+	printf("\nMAIN: %s", msg_buffer);
+	fflush(stdout);
+	
+	ARP_Packet *arp_packet = retrieve_arp_packet(msg_buffer);
+	if(arp_packet==NULL){
+		printf("\nMessage from Server: ", msg_buffer);
+	}
+	else{
+		printf("ARP Request Recieved\n%s", msg_buffer);
+	}
 
 	/*
 	printf("\n\nDelimit Ping Messages with ';'\nEnter 'ENDSESSION;' to terminate connection\n");
