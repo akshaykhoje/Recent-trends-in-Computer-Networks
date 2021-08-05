@@ -10,6 +10,9 @@
 #ifndef msg_io
 	#include "msg_io.h"
 #endif
+#ifndef ClientList
+	#include "ClientList.h"
+#endif
 
 void main(){
 	
@@ -36,7 +39,7 @@ void main(){
 
 	struct sockaddr_in *client_addr = malloc(sizeof(struct sockaddr_in));
 	int client_addr_len = sizeof(struct sockaddr_in);
-	// BLOCKING routine to accept a client
+	// BLOCKING routine to accept first client
 	int client_socket = accept_client(self_socket, client_addr, &client_addr_len);
 	if (client_socket<0){
 		printf("\nError when connecting to client. Retry!\n");
@@ -60,26 +63,29 @@ void main(){
 	}
 
 	// Keep track of all client sockets.
-	int num_sockets = 1;
-	int *client_sockets = (int*)malloc(sizeof(int)*num_sockets);
+	int num_clients = 1;
+	int *client_sockets = (int*)malloc(sizeof(int)*num_clients);
 	*(client_sockets+0) = client_socket;
 	// To keep track of known clients
 	ClientList *known_clients = make_empty_client_list();
+	add_client(client_socket, client_addr, known_clients);
 
-	struct sockaddr_in *client_addr = malloc(sizeof(struct sockaddr_in));
-	int client_addr_len = sizeof(struct sockaddr_in);
 	char *self_mac = (char*)malloc(sizeof(char)*MAC_ADDRESS_SIZE);
 	char *self_ip = (char*)malloc(sizeof(char)*IP_ADDRESS_SIZE);
 	char *find_mac = (char*)malloc(sizeof(char)*MAC_ADDRESS_SIZE);
 	char *find_ip = (char*)malloc(sizeof(char)*IP_ADDRESS_SIZE);
 	char *msg_buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
+	char *msg_data = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
 	// Store own MAC and IP
 	printf("\nEnter Own MAC Address: ");
 	scanf(" %s", self_mac);
 	printf("Enter Own IP Address: ");
 	scanf(" %s", self_ip);	
 	
+	fd_set readable_fds;
 	int msg_size = 0;
+	int response;
+	int read_fd;
 	char ch = 'n';
 	char *arp_packet_string;
 	ARP_Packet *arp_packet;
@@ -89,26 +95,44 @@ void main(){
 		scanf(" %s", find_ip);
 		// Accept message
 		printf("Enter 16-bit Message: ");
-		scanf(" %s", msg_buffer);
+		scanf(" %s", msg_data);
 		// Prepare request packet
 		arp_packet = make_arp_packet(REQUEST_OPERATION_ID, self_mac, self_ip, EMPTY_MAC_ADDRESS, find_ip);
 		arp_packet_string = serialize_arp_packet(arp_packet);
 		printf("\n%s", arp_packet_string);
-		// Send request packet
-		int msg_size = write(client_socket, arp_packet_string, ARP_PACKET_STRING_SIZE);
-		printf("\nARP-Request broadcasted, waiting for response...\n");
-		msg_size = receive_message(self_socket, msg_buffer, client_addr, &client_addr_len);
-		arp_packet = retrieve_arp_packet(msg_buffer);
-		if(arp_packet==NULL){
-			printf("\nUnexpected response received...\n");
-			printf(" %s\n%s", msg_buffer, client_addr);
+		// Send request packet to all clients
+		for(int i=0;i<num_clients;i++){
+			msg_size = write(client_socket, arp_packet_string, ARP_PACKET_STRING_SIZE);
 		}
-		else{
-
+		// BLOCK till some client sends a response
+		printf("\n---------------------------------------------------------------");
+		printf("\nARP-Request broadcasted, waiting for response...\n");		
+		response = wait_for_message(client_sockets, num_clients, &readable_fds);
+		if(response == -9){
+			printf("\nTimed out when waiting for responses\nDropping data...\n");
+			continue;
 		}
-		if (msg_size==0){
-			printf("\nClient shut-down abruptly!\n");
-			destroy_socket(client_socket);
+		else if(response == -8){
+			printf("\nError occurred when monitoring socket for responses\nRetry!\n");
+		}
+		// Handle all available readable descriptors
+		for(int read_idx=0; read_idx<num_clients; read_idx++){
+			read_fd = *(client_sockets+read_idx);		
+			if (FD_ISSET(read_fd, &readable_fds)==0){
+				// This socket is not readable
+				continue;
+			}			
+			msg_size = receive_message(self_socket, msg_buffer, client_addr, &client_addr_len);
+			arp_packet = retrieve_arp_packet(msg_buffer);
+			if(arp_packet==NULL){
+				printf("\nUnexpected response received...\n");
+				printf("%s\n%s", msg_buffer);
+			}
+			else{
+				printf("\nARP-Response Received\n%s", msg_data);
+				msg_size = write(client_socket, msg_data, MSG_BUFFER_SIZE);
+				printf("\nData transmitted");
+			}
 		}
 		printf("\nMore messages to send? (y/n): ");
 		scanf(" %c", &ch);

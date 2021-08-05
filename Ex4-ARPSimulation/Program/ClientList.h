@@ -4,7 +4,7 @@
 #include "tcp_socket.h"
 
 struct clients_list {
-	int conn_fd;
+	int *conn_fds;
 	in_addr_t *ips;
 	int *ports;
 	int count;
@@ -14,56 +14,32 @@ typedef struct clients_list ClientList;
 
 ClientList* make_empty_client_list(){
 	ClientList *handle = (ClientList*)malloc(sizeof(ClientList));
-	handle->ips = (in_addr_t*)malloc(sizeof(in_addr_t)*MAX_CLIENTS);
-	handle->ports = (int*)malloc(sizeof(int)*MAX_CLIENTS);
+	handle->conn_fds = (int*)malloc(sizeof(int));
+	handle->ips = (in_addr_t*)malloc(sizeof(in_addr_t));
+	handle->ports = (int*)malloc(sizeof(int));
 	handle->count = 0;
 	return handle;
 }
 
-
-int find_or_add_client(struct sockaddr_in *client_addr, ClientList *clients){
-	int search_ip = (client_addr->sin_addr).s_addr;
-	int search_port = client_addr->sin_port;
-	int first_empty = -1;
-	int i;
-	for(i=0;i<clients->count;i++){
-		if( *(clients->ips+i)==search_ip && *(clients->ports+i)==search_port){
-			return i;
-		}
-		else if( *(clients->ips+i)==-1 && *(clients->ports+i)==-1){
-			// Found an empty position
-			first_empty = i;
-		}
-	}
-	if(clients->count==MAX_CLIENTS){
-		// Cannot add new clients now
-		return -11;       // Server is busy
-	}
-	// Add the new client
-	if(first_empty!=-1){
-		// Use intermediate empty slots if available
-		i = first_empty;
-	}
-	*(clients->ips+i) = search_ip;
-	*(clients->ports+i) = search_port;
+void add_client(int conn_fd, struct sockaddr_in *client_addr, ClientList *clients){
+	int client_count = clients->count;
+	clients->conn_fds = (int*)realloc(clients->conn_fds, sizeof(int)*client_count);
+	clients->ips = (in_addr_t*)realloc(clients->ips, sizeof(in_addr_t)*client_count);
+	clients->ports = (int*)realloc(clients->ports, sizeof(int)*client_count);
+	*(clients->conn_fds+clients->count) = conn_fd;
+	*(clients->ips+clients->count) = (client_addr->sin_addr).s_addr;
+	*(clients->ports+clients->count) = client_addr->sin_port;
 	clients->count++;
-	return i;   // Not found
 }
 
 
-short remove_client(struct sockaddr_in *client_addr, ClientList *clients){
-	int search_ip = (client_addr->sin_addr).s_addr;
-	int search_port = client_addr->sin_port;
-	int first_empty = -1;
+int find_or_add_client(int search_fd, ClientList *clients){
 	for(int i=0;i<clients->count;i++){
-		if( *(clients->ips+i)==search_ip && *(clients->ports+i)==search_port){
-			*(clients->ips+i) = -1;
-			*(clients->ports+i)= -1;
-			clients->count--;
-			return i;  // Removed
+		if( *(clients->conn_fds+i)==search_fd){
+			return i;
 		}
 	}
-	return -1;   // Not found
+	return -1; //Not found
 }
 
 #endif 

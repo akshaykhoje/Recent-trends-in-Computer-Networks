@@ -18,6 +18,7 @@
 #define MSG_DELIMITER ';'
 #define IP_ADDRESS_SIZE 20
 #define MAC_ADDRESS_SIZE 20
+#define MSG_WAIT_TIMEOUT 20
 
 /*	
 Use BLOCKING sockets (default configuration)
