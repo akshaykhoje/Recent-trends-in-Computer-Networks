@@ -53,6 +53,7 @@ void main(){
 
 	char *self_mac = (char*)malloc(sizeof(char)*MAC_ADDRESS_SIZE);
 	char *self_ip = (char*)malloc(sizeof(char)*IP_ADDRESS_SIZE);
+	char *find_mac = (char*)malloc(sizeof(char)*MAC_ADDRESS_SIZE);
 	char *find_ip = (char*)malloc(sizeof(char)*IP_ADDRESS_SIZE);
 	char *msg_buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
 
@@ -62,9 +63,12 @@ void main(){
 	scanf(" %s", self_ip);
 
 	printf("\nEnter Destination IP Address: ");
-	scanf(" %s", self_ip);
+	scanf(" %s", find_ip);
+
 	printf("\nEnter 16-bit Message: ");
 	scanf(" %s", msg_buffer);
+
+	ARP_Packet *arp_packet = make_arp_packet(SEND_OPERATION_ID, self_mac, self_ip, EMPTY_MAC_ADDRESS, find_ip);
 
 	msg_size = write(client_socket, msg_buffer, msg_size);
 	printf("\n(ARP-Packet Broadcasted)\n");

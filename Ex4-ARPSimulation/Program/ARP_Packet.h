@@ -1,6 +1,11 @@
 #ifndef ARP_Packet
 #define ARP_Packet
 
+#define SEND_OPERATION_ID 1
+#define RECEIVE_OPERATION_ID
+#define ARP_PACKET_STRING_SIZE 100
+#define EMPTY_MAC_ADDRESS "00-00-00-00-00-00"
+
 struct arp_packet{
 	int operation_id;
 	char *source_MAC;
@@ -36,7 +41,8 @@ ARP_Packet* make_arp_packet(int oper_id, char *source_MAC, char *source_IP, char
 
 ARP_Packet* retreive_arp_packet(char *packet_str){
 	ARP_Packet *packet = make_empty_arp_packet();
-	sscanf("%d | %s | %s | %s | %s", 
+	sscanf(packet_str,
+		"%d | %s | %s | %s | %s", 
 		packet->operation_id,
 		packet->source_MAC,
 		packet->source_IP,
@@ -44,6 +50,19 @@ ARP_Packet* retreive_arp_packet(char *packet_str){
 		packet->destn_IP
 	)
 	return packet;
+}
+
+char* serialize_arp_packet(ARP_Packet *packet){
+	char *packet_str = (char*)malloc(sizeof(char)*ARP_PACKET_STRING_SIZE);
+	printf(pakcet_str,
+		"%d | %s | %s | %s | %s", 
+		packet->operation_id,
+		packet->source_MAC,
+		packet->source_IP,
+		packet->destn_MAC,
+		packet->destn_IP
+	)
+	return packet_str;
 }
 
 
