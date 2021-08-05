@@ -51,7 +51,41 @@ void main(){
 		}
 	}
 
+	char *self_mac = (char*)malloc(sizeof(char)*MAC_ADDRESS_SIZE);
+	char *self_ip = (char*)malloc(sizeof(char)*IP_ADDRESS_SIZE);
+	char *find_ip = (char*)malloc(sizeof(char)*IP_ADDRESS_SIZE);
 	char *msg_buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
+
+	printf("\nEnter Own MAC Address: ");
+	scanf(" %s", self_mac);
+	printf("\nEnter Own IP Address: ");
+	scanf(" %s", self_ip);
+
+	printf("\nEnter Destination IP Address: ");
+	scanf(" %s", self_ip);
+	printf("\nEnter 16-bit Message: ");
+	scanf(" %s", msg_buffer);
+
+	msg_size = write(client_socket, msg_buffer, msg_size);
+	printf("\n(ARP-Packet Broadcasted)\n");
+	msg_size = read(client_socket, msg_buffer, MSG_BUFFER_SIZE);
+	printf(" %s", msg_buffer);
+	if (msg_size==0){
+		printf("\nClient shut-down abruptly!\n");
+		destroy_socket(client_socket);
+	}
+	if (check_termination_init(msg_buffer)){
+		printf("\nClient terminated connection\n");
+		bzero(msg_buffer, MSG_BUFFER_SIZE);
+		msg_size = write(client_socket, TERMINATION_ACK_STRING, msg_size);
+		destroy_socket(client_socket);
+		break;
+	}
+	printf("\nCLIENT pinged: %s", msg_buffer);
+	msg_size = write(client_socket, msg_buffer, msg_size);
+	printf("\n(Message echoed back)\n");
+
+	/*
 	int msg_size = 0;
 	do{
 		// BLOCKING routine to wait for a message
@@ -74,6 +108,7 @@ void main(){
 		msg_size = write(client_socket, msg_buffer, msg_size);
 		printf("\n(Message echoed back)\n");
 	}while(1==1);
+	*/
 
 	destroy_socket(self_socket);
 	return;
