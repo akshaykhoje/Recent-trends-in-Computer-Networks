@@ -57,7 +57,7 @@ void main(){
 		else{
 			printf("ARP Request Recieved\n%s", msg_buffer);
 			if(is_destn(arp_packet, self_ip)){
-				printf("IP Address Matched\n");
+				printf("\nIP Address Matched\n");
 				arp_packet = make_arp_packet(RESPONSE_OPERATION_ID, self_mac, self_ip, arp_packet->source_MAC, arp_packet->source_IP);
 				arp_packet_string = serialize_arp_packet(arp_packet);			
 				msg_size = write(self_socket, arp_packet_string, ARP_PACKET_STRING_SIZE);
@@ -65,7 +65,7 @@ void main(){
 				printf("\n(ARP Response Sent)\n");
 			}
 			else{
-				printf("IP Address Did NOT Match\n");
+				printf("\nIP Address Did NOT Match\n");
 			}
 		}
 		fflush(stdout);
