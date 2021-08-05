@@ -60,6 +60,15 @@ void main(){
 		return;
 	}
 
+	// Prepare address storage locations
+	char *self_mac = (char*)malloc(sizeof(char)*MAC_ADDRESS_SIZE);
+	char *self_ip = (char*)malloc(sizeof(char)*IP_ADDRESS_SIZE);
+	// Store own MAC and IP
+	printf("\nEnter Own MAC Address: ");
+	scanf(" %s", self_mac);
+	printf("Enter Own IP Address: ");
+	scanf(" %s", self_ip);	
+
 	if (initiate_listen(self_socket)<0){
 		printf("\nCould not listen on server socket. Retry!\n");
 		destroy_socket(self_socket);
@@ -69,7 +78,7 @@ void main(){
 		printf("\nServer listening for connections from all local interfaces...\n");
 	}
 
-	// Client detail storage initialization
+	// Client details storage initialization
 	struct sockaddr_in *client_addr = malloc(sizeof(struct sockaddr_in));
 	int client_addr_len = sizeof(struct sockaddr_in);
 	int client_addr_port;
@@ -106,29 +115,22 @@ void main(){
 	}
 
 	// Parent process to handle message transmission
-	// Prepare address storage locations
-	char *self_mac = (char*)malloc(sizeof(char)*MAC_ADDRESS_SIZE);
-	char *self_ip = (char*)malloc(sizeof(char)*IP_ADDRESS_SIZE);
 	char *find_mac = (char*)malloc(sizeof(char)*MAC_ADDRESS_SIZE);
 	char *find_ip = (char*)malloc(sizeof(char)*IP_ADDRESS_SIZE);
 	char *msg_buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
 	char *msg_data = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
-	// Store own MAC and IP
-	printf("\nEnter Own MAC Address: ");
-	scanf(" %s", self_mac);
-	printf("Enter Own IP Address: ");
-	scanf(" %s", self_ip);	
+	
 	// Prepare data transmission loop
 	fd_set readable_fds;
 	int msg_size = 0;
 	int response;
-	int read_fd;
+	int read_fd, write_fd;
 	char ch = 'n';
 	char *arp_packet_string;
 	ARP_Packet *arp_packet;
 	do{
 		// Accept Destination Address
-		printf("Enter Destination IP Address: ");
+		printf("\nEnter Destination IP Address: ");
 		scanf(" %s", find_ip);
 		// Accept message
 		printf("Enter 16-bit Message: ");
@@ -139,7 +141,8 @@ void main(){
 		printf("\n%s", arp_packet_string);
 		// Send request packet to all clients
 		for(int i=0;i<num_clients;i++){
-			msg_size = write(client_socket, arp_packet_string, ARP_PACKET_STRING_SIZE);
+			write_fd = *(client_sockets+i);
+			msg_size = write(write_fd, arp_packet_string, ARP_PACKET_STRING_SIZE);
 		}
 		// BLOCK till some client sends a response
 		printf("\nARP-Request broadcasted, waiting for response...\n");		

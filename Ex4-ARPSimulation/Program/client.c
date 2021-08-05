@@ -54,7 +54,7 @@ void main(){
 			printf("\nMessage from host: %s\n", msg_buffer);
 		}
 		else{
-			printf("ARP Request Recieved\n%s", msg_buffer);
+			printf("\nARP Request Recieved\n%s", msg_buffer);
 			if(is_destn(arp_packet, self_ip)){
 				printf("\nIP Address Matched\n");
 				arp_packet = make_arp_packet(RESPONSE_OPERATION_ID, self_mac, self_ip, arp_packet->source_MAC, arp_packet->source_IP);
