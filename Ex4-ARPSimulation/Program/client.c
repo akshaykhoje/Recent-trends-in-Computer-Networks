@@ -12,7 +12,7 @@ void main(){
 	}
 
 	char *server_ip = (char*)malloc(sizeof(char)*IP_STRING_LEN);
-	printf("\nEnter File-Server IP Address: ");
+	printf("\nEnter Host-IP Address: ");
 	scanf(" %s", server_ip);
 	if (connect_server(self_socket, server_ip) < 0){
 		printf("\nCould not connect to ECHO-Server.\nMake sure the server is running!\n");
@@ -20,7 +20,7 @@ void main(){
 		return;
 	}
 	else{
-		printf("\nConnected to ECHO-Server");
+		printf("\nConnected to Host");
 	}
 
 	char *msg_buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);

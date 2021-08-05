@@ -1,17 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-#ifndef udp_socket
-	#include "udp_socket.h"
-#endif	
-
-#ifndef msg_io
-	#include "msg_io.h"
-#endif
-
-#ifndef client_list
-	#include "ClientList.h"
-#endif
+#include "tcp_socket.h"
 
 void main(){
 	
@@ -27,122 +17,62 @@ void main(){
 		return;
 	}
 
-	// Keep track of all server sockets.
-	int num_sockets = 1;
-	int *server_sockets = (int*)malloc(sizeof(int)*num_sockets);
-	*(server_sockets+0) = self_socket;
+	if (initiate_listen(self_socket)<0){
+		printf("\nCould not listen on server socket. Retry!\n");
+		destroy_socket(self_socket);
+		return;
+	}
+	else{
+		printf("\nServer listening for connections from all local interfaces...\n");
+	}
 
-	// To keep track of known clients
-	ClientList *known_clients = make_empty_client_list();
-	// To store sender-client address
 	struct sockaddr_in *client_addr = malloc(sizeof(struct sockaddr_in));
 	int client_addr_len = sizeof(struct sockaddr_in);
-	char *client_addr_ip_str = (char*)malloc(sizeof(char)*ADDRESS_BUFFER_SIZE);
-	int client_addr_port;
+	// BLOCKING routine to accept a client
+	int client_socket = accept_client(self_socket, client_addr, &client_addr_len);
+	if (client_socket<0){
+		printf("\nError when connecting to client. Retry!\n");
+		destroy_socket(self_socket);
+		return;
+	}
+	else if(client_addr_len == -1){
+		printf("Client connected.\nCould not read address\n");
+	}
+	else{
+		char *client_addr_ip_str = (char*)malloc(sizeof(char)*ADDRESS_BUFFER_SIZE);
+		// Alternatively, use inet_ntoa
+		inet_ntop(ADDRESS_FAMILY, (void*)&client_addr->sin_addr, client_addr_ip_str, ADDRESS_BUFFER_SIZE);
+		int client_addr_port = (int)ntohs(client_addr->sin_port);
+		if (client_addr_ip_str == NULL) {
+			printf("Client connected.\nCould not read address\n");
+		}
+		else{
+			printf("Connected to Client (%s:%d)\n", client_addr_ip_str, client_addr_port);
+		}
+	}
 
 	char *msg_buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
-	fd_set readable_fds;
 	int msg_size = 0;
-	int response;
-	int read_fd;
-	int client_id;
-
-	char *broadcastIP = "255.255.255.255";  
-	int broadcastPort = 33333;
-	int broadcastPermission = 1;
-	struct sockaddr_in broadcastAddr;     
-	char *sendString = "Broadcast, hello";          
-	int sendStringLen; 
-	int sock;
-
 	do{
-
-		if ((sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0){
-			fprintf(stderr, "socket error");
-				exit(1);
+		// BLOCKING routine to wait for a message
+		bzero(msg_buffer, MSG_BUFFER_SIZE);
+		msg_size = read(client_socket, msg_buffer, MSG_BUFFER_SIZE);
+		if (msg_size==0){
+			printf("\nClient shut-down abruptly!\n");
+			destroy_socket(client_socket);
+			break;
 		}
-
-		if (setsockopt(sock, SOL_SOCKET, SO_BROADCAST, (void *) &broadcastPermission,sizeof(broadcastPermission)) < 0){
-			fprintf(stderr, "setsockopt error");
-			exit(1);
+		// Echo back
+		if (check_termination_init(msg_buffer)){
+			printf("\nClient terminated connection\n");
+			bzero(msg_buffer, MSG_BUFFER_SIZE);
+			msg_size = write(client_socket, TERMINATION_ACK_STRING, msg_size);
+			destroy_socket(client_socket);
+			break;
 		}
-
-		/* Construct local address structure */
-		memset(&broadcastAddr, 0, sizeof(broadcastAddr));   
-		broadcastAddr.sin_family = AF_INET;                 
-		broadcastAddr.sin_addr.s_addr = inet_addr(broadcastIP);
-		broadcastAddr.sin_port = htons(broadcastPort);   
-		sendStringLen = strlen(sendString);  
-
-		/* Broadcast sendString in datagram to clients */
-		if (sendto(sock, sendString, sendStringLen, 0, (struct sockaddr *)&broadcastAddr, sizeof(broadcastAddr)) != sendStringLen){
-			fprintf(stderr, "sendto error");
-			exit(1);
-		}
-		printf("\nBroadcasted");
-
-		// BLOCK till some client sends message
-		printf("\n---------------------------------------------------------------");
-		printf("\nServer waiting for client messages from all local interfaces...\n\n");
-		
-		response = wait_for_message(server_sockets, num_sockets, &readable_fds);
-		if(response == -9){
-			printf("\nTimed out when waiting for messages\nExiting...\n");
-			//break;
-		}
-		else if(response == -8){
-			printf("\nError occurred when monitoring socket for messages\nRetry!\n");
-		}
-
-		// Handle all available readable descriptors
-		for(int read_idx=0; read_idx<num_sockets; read_idx++){
-			read_fd = *(server_sockets+read_idx);
-		
-			if (FD_ISSET(read_fd, &readable_fds)==0){
-				// This socket is not readable
-				continue;
-			}
-			
-			msg_size = receive_message(self_socket, msg_buffer, client_addr, &client_addr_len);
-			if (msg_size==0){
-				printf("\nEmpty message\n");
-			}
-			else if(client_addr_len == -1){
-				printf("\nMessage received from Client.\nCould not read address\n");
-			}
-			else{
-				// Alternatively, use inet_ntoa
-				inet_ntop(ADDRESS_FAMILY, (void*)&client_addr->sin_addr, client_addr_ip_str, ADDRESS_BUFFER_SIZE);
-				client_addr_port = (int)ntohs(client_addr->sin_port);
-				if (client_addr_ip_str == NULL) {
-					printf("\nMessage received from Client.\nCould not read address\n");
-					continue;
-				}
-				else{
-					client_id = find_or_add_client(client_addr, known_clients);
-					if(client_id==-11){
-						printf("\nNew client rejected and acknowledged. Client limit reached!\n");
-						msg_size = send_reply(self_socket, SERVER_REJECT_STRING, client_addr, client_addr_len);
-						continue;
-					}
-					else if(strcmp(msg_buffer, TERMINATION_INIT_STRING)==0){
-						client_id = remove_client(client_addr, known_clients);
-						msg_size = send_reply(self_socket, TERMINATION_ACK_STRING, client_addr, client_addr_len);
-						printf("\nClient-%c (%s:%d) Removed from known clients\n", (65+client_id), client_addr_ip_str, client_addr_port);
-						continue;
-					}
-					printf("\nMessage received from \nClient-%c (%s:%d): ", (65+client_id), client_addr_ip_str, client_addr_port);
-				}
-				printf("%s", msg_buffer);
-				// Replying back
-				bzero(msg_buffer, MSG_BUFFER_SIZE);
-				printf("\nEnter Reply: ");
-				scanf(" %[^;]s", msg_buffer);
-				// Consume the last newline character from read-buffer
-				getchar();   
-				msg_size = send_reply(self_socket, msg_buffer, client_addr, client_addr_len);
-			}
-		}
+		printf("\nCLIENT pinged: %s", msg_buffer);
+		msg_size = write(client_socket, msg_buffer, msg_size);
+		printf("\n(Message echoed back)\n");
 	}while(1==1);
 
 	destroy_socket(self_socket);
