@@ -1,7 +1,12 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-#include "tcp_socket.h"
+#ifndef tcp_socket
+	#include "tcp_socket.h"
+#endif
+#ifndef ARP_Packet_h
+	#include "ARP_Packet.h"
+#endif
 
 void main(){
 	

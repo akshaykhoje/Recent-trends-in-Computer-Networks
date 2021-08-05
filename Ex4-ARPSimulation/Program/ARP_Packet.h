@@ -1,10 +1,13 @@
-#ifndef ARP_Packet
-#define ARP_Packet
+#ifndef ARP_Packet_h
+#define ARP_Packet_h
+
+#include "tcp_socket.h"
 
 #define SEND_OPERATION_ID 1
 #define RECEIVE_OPERATION_ID
 #define ARP_PACKET_STRING_SIZE 100
 #define EMPTY_MAC_ADDRESS "00-00-00-00-00-00"
+
 
 struct arp_packet{
 	int operation_id;
@@ -14,7 +17,6 @@ struct arp_packet{
 	char *destn_IP;
 };
 typedef struct arp_packet ARP_Packet;
-
 
 ARP_Packet* make_empty_arp_packet(){
 	// Allocate memory

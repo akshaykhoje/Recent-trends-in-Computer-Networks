@@ -1,3 +1,6 @@
+#ifndef tcp_socket 
+#define tcp_socket
+
 #include<sys/socket.h>
 #include<arpa/inet.h>
 #include<unistd.h>
@@ -110,3 +113,5 @@ int accept_client(int sock_fd, struct sockaddr_in *client_addr, int *client_addr
 void destroy_socket(int sock_fd){
 	close(sock_fd);
 }
+
+#endif
