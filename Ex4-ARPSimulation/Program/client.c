@@ -49,8 +49,14 @@ void main(){
 	}
 	else{
 		printf("ARP Request Recieved\n%s", msg_buffer);
+		if(is_destn(arp_packet, self_ip)){
+			printf("IP Address Matched");
+		}
+		else{
+			printf("IP Address Did NOT Match");
+		}
 	}
-	
+
 
 	printf("\n\nDelimit Ping Messages with ';'\nEnter 'ENDSESSION;' to terminate connection\n");
 	do {

@@ -68,6 +68,12 @@ ARP_Packet* retrieve_arp_packet(char *packet_str){
 	return packet;
 }
 
+
+short is_destn(ARP_Packet *packet, char *self_ip){
+	return (strcmp(packet->destn_IP, self_ip)==0);
+}
+
+
 char* serialize_arp_packet(ARP_Packet *packet){
 	char *packet_str = (char*)malloc(sizeof(char)*ARP_PACKET_STRING_SIZE);
 	sprintf(packet_str,
