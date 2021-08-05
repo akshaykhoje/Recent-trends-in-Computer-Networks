@@ -11,7 +11,7 @@ void main(){
 		return;
 	}
 
-	char *server_ip = (char*)malloc(sizeof(char)*IP_STRING_LEN);
+	char *server_ip = (char*)malloc(sizeof(char)*IP_ADDRESS_SIZE);
 	printf("\nEnter Host-IP Address: ");
 	scanf(" %s", server_ip);
 	if (connect_server(self_socket, server_ip) < 0){
@@ -25,6 +25,11 @@ void main(){
 
 	char *msg_buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
 	int msg_size = 0;
+	bzero(msg_buffer, MSG_BUFFER_SIZE);
+	msg_size = read(self_socket, msg_buffer, MSG_BUFFER_SIZE);
+	printf("\n%s", msg_buffer);
+
+	/*
 	printf("\n\nDelimit Ping Messages with ';'\nEnter 'ENDSESSION;' to terminate connection\n");
 	do {
 		bzero(msg_buffer, MSG_BUFFER_SIZE);
@@ -43,4 +48,5 @@ void main(){
 		}
 		printf("SERVER echoed: %s\n", msg_buffer, MSG_BUFFER_SIZE);
 	}while(1==1);
+	*/
 }

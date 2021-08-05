@@ -64,18 +64,20 @@ void main(){
 
 	printf("\nEnter Own MAC Address: ");
 	scanf(" %s", self_mac);
-	printf("\nEnter Own IP Address: ");
+	printf("Enter Own IP Address: ");
 	scanf(" %s", self_ip);
 
-	printf("\nEnter Destination IP Address: ");
+	printf("Enter Destination IP Address: ");
 	scanf(" %s", find_ip);
 
-	printf("\nEnter 16-bit Message: ");
+	printf("Enter 16-bit Message: ");
 	scanf(" %s", msg_buffer);
 
 	ARP_Packet *arp_packet = make_arp_packet(SEND_OPERATION_ID, self_mac, self_ip, EMPTY_MAC_ADDRESS, find_ip);
+	char *arp_packet_string = serialize_arp_packet(arp_packet);
+	printf("\n%s", arp_packet_string);
 
-	int msg_size = write(client_socket, msg_buffer, msg_size);
+	int msg_size = write(client_socket, arp_packet_string, ARP_PACKET_STRING_SIZE);
 	printf("\n(ARP-Packet Broadcasted)\n");
 	msg_size = read(client_socket, msg_buffer, MSG_BUFFER_SIZE);
 	printf(" %s", msg_buffer);

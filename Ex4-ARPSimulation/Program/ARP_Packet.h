@@ -5,7 +5,7 @@
 
 #define SEND_OPERATION_ID 1
 #define RECEIVE_OPERATION_ID
-#define ARP_PACKET_STRING_SIZE 100
+#define ARP_PACKET_STRING_SIZE 120
 #define EMPTY_MAC_ADDRESS "00-00-00-00-00-00"
 
 
@@ -56,7 +56,7 @@ ARP_Packet* retreive_arp_packet(char *packet_str){
 
 char* serialize_arp_packet(ARP_Packet *packet){
 	char *packet_str = (char*)malloc(sizeof(char)*ARP_PACKET_STRING_SIZE);
-	printf(packet_str,
+	sprintf(packet_str,
 		"%d | %s | %s | %s | %s", 
 		packet->operation_id,
 		packet->source_MAC,
