@@ -33,7 +33,7 @@ void main(){
 		return;
 	}
 	else{
-		printf("\nConnected to Host");
+		printf("Connected to Host\n");
 	}
 
 	// Allocate message memory
@@ -54,6 +54,7 @@ void main(){
 			printf("\nMessage from host: %s\n", msg_buffer);
 		}
 		else{
+			printf("\n---------------------------------------------");
 			printf("\nARP Request Recieved\n%s", msg_buffer);
 			if(is_destn(arp_packet, self_ip)){
 				printf("\nIP Address Matched\n");

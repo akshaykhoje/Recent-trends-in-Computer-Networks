@@ -130,6 +130,7 @@ void main(){
 	ARP_Packet *arp_packet;
 	do{
 		// Accept Destination Address
+		printf("\n---------------------------------------------");
 		printf("\nEnter Destination IP Address: ");
 		scanf(" %s", find_ip);
 		// Accept message
