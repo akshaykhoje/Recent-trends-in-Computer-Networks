@@ -75,7 +75,7 @@ void main(){
 
 	ARP_Packet *arp_packet = make_arp_packet(SEND_OPERATION_ID, self_mac, self_ip, EMPTY_MAC_ADDRESS, find_ip);
 
-	msg_size = write(client_socket, msg_buffer, msg_size);
+	int msg_size = write(client_socket, msg_buffer, msg_size);
 	printf("\n(ARP-Packet Broadcasted)\n");
 	msg_size = read(client_socket, msg_buffer, MSG_BUFFER_SIZE);
 	printf(" %s", msg_buffer);
@@ -88,7 +88,6 @@ void main(){
 		bzero(msg_buffer, MSG_BUFFER_SIZE);
 		msg_size = write(client_socket, TERMINATION_ACK_STRING, msg_size);
 		destroy_socket(client_socket);
-		break;
 	}
 	printf("\nCLIENT pinged: %s", msg_buffer);
 	msg_size = write(client_socket, msg_buffer, msg_size);
