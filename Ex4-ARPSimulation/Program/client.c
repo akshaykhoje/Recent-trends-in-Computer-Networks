@@ -37,15 +37,12 @@ void main(){
 	scanf(" %s", self_mac);
 	printf("Enter Own IP Address: ");
 	scanf(" %s", self_ip);
-
+	// Allocate message memory
 	char *msg_buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
 	int msg_size = 0;
 	bzero(msg_buffer, MSG_BUFFER_SIZE);
 	msg_size = read(self_socket, msg_buffer, MSG_BUFFER_SIZE);
-	printf("\nGREAT");
-	printf("\nMAIN: %s", msg_buffer);
-	fflush(stdout);
-	
+	// Attempt packet read, else print message
 	ARP_Packet *arp_packet = retrieve_arp_packet(msg_buffer);
 	if(arp_packet==NULL){
 		printf("\nMessage from Server: ", msg_buffer);
@@ -53,8 +50,8 @@ void main(){
 	else{
 		printf("ARP Request Recieved\n%s", msg_buffer);
 	}
+	
 
-	/*
 	printf("\n\nDelimit Ping Messages with ';'\nEnter 'ENDSESSION;' to terminate connection\n");
 	do {
 		bzero(msg_buffer, MSG_BUFFER_SIZE);
@@ -73,5 +70,4 @@ void main(){
 		}
 		printf("SERVER echoed: %s\n", msg_buffer, MSG_BUFFER_SIZE);
 	}while(1==1);
-	*/
 }

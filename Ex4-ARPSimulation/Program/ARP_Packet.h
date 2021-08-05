@@ -57,6 +57,14 @@ ARP_Packet* retrieve_arp_packet(char *packet_str){
 		packet->destn_MAC,
 		packet->destn_IP
 	);
+	if(packet->operation_id==-1 ||
+		strcmp(packet->source_MAC, STRING_INIT)==0 ||
+		strcmp(packet->source_IP, STRING_INIT)==0 ||
+		strcmp(packet->destn_MAC, STRING_INIT)==0 || 
+		strcmp(packet->destn_IP, STRING_INIT)==0
+	){
+		return NULL;
+	}
 	return packet;
 }
 
