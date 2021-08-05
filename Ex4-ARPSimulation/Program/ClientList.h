@@ -1,16 +1,10 @@
 #ifndef client_list
 #define client_list 
 
-#include "udp_socket.h"
-
-#define MAX_CLIENTS 2
-
-struct linked_list{
-  void *data;
-  struct linked_list *next;
-};
+#include "tcp_socket.h"
 
 struct clients_list {
+	int conn_fd;
 	in_addr_t *ips;
 	int *ports;
 	int count;

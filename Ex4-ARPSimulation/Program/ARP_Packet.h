@@ -3,8 +3,8 @@
 
 #include "tcp_socket.h"
 
-#define SEND_OPERATION_ID 1
-#define RECEIVE_OPERATION_ID
+#define REQUEST_OPERATION_ID 1
+#define RESPONSE_OPERATION_ID 2
 #define ARP_PACKET_STRING_SIZE 120
 #define EMPTY_MAC_ADDRESS "00-00-00-00-00-00"
 #define STRING_INIT "-"

@@ -8,8 +8,8 @@
 #include<errno.h>
 
 #define SERVER_PORT 8080
-#define BACKLOG_LIMIT 5
 #define LOCALHOST_IP "127.0.0.1"
+#define MAX_CLIENTS 3
 #define ADDRESS_FAMILY AF_INET
 #define ADDRESS_BUFFER_SIZE 30
 #define MSG_BUFFER_SIZE 120
@@ -88,7 +88,7 @@ short connect_server(int sock_fd, char *server_ip){
 }
 
 short initiate_listen(int sock_fd){
-	if (!listen(sock_fd, BACKLOG_LIMIT)){
+	if (!listen(sock_fd, MAX_CLIENTS)){
 		return 0;    // Success
 	}
 	else{

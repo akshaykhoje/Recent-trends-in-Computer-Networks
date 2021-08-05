@@ -7,6 +7,9 @@
 #ifndef ARP_Packet_h
 	#include "ARP_Packet.h"
 #endif
+#ifndef msg_io
+	#include "msg_io.h"
+#endif
 
 void main(){
 	
@@ -56,6 +59,15 @@ void main(){
 		}
 	}
 
+	// Keep track of all client sockets.
+	int num_sockets = 1;
+	int *client_sockets = (int*)malloc(sizeof(int)*num_sockets);
+	*(client_sockets+0) = client_socket;
+	// To keep track of known clients
+	ClientList *known_clients = make_empty_client_list();
+
+	struct sockaddr_in *client_addr = malloc(sizeof(struct sockaddr_in));
+	int client_addr_len = sizeof(struct sockaddr_in);
 	char *self_mac = (char*)malloc(sizeof(char)*MAC_ADDRESS_SIZE);
 	char *self_ip = (char*)malloc(sizeof(char)*IP_ADDRESS_SIZE);
 	char *find_mac = (char*)malloc(sizeof(char)*MAC_ADDRESS_SIZE);
@@ -66,59 +78,41 @@ void main(){
 	scanf(" %s", self_mac);
 	printf("Enter Own IP Address: ");
 	scanf(" %s", self_ip);	
-	// Accept Destination Address
-	printf("Enter Destination IP Address: ");
-	scanf(" %s", find_ip);
-	// Accept message
-	printf("Enter 16-bit Message: ");
-	scanf(" %s", msg_buffer);
-
-	ARP_Packet *arp_packet = make_arp_packet(SEND_OPERATION_ID, self_mac, self_ip, EMPTY_MAC_ADDRESS, find_ip);
-	char *arp_packet_string = serialize_arp_packet(arp_packet);
-	printf("\n%s", arp_packet_string);
 	
-	int msg_size = write(client_socket, arp_packet_string, ARP_PACKET_STRING_SIZE);
-	printf("\n(ARP-Packet Broadcasted)\n");
-	msg_size = read(client_socket, msg_buffer, MSG_BUFFER_SIZE);
-	printf(" %s", msg_buffer);
-	if (msg_size==0){
-		printf("\nClient shut-down abruptly!\n");
-		destroy_socket(client_socket);
-	}
-	if (check_termination_init(msg_buffer)){
-		printf("\nClient terminated connection\n");
-		bzero(msg_buffer, MSG_BUFFER_SIZE);
-		msg_size = write(client_socket, TERMINATION_ACK_STRING, msg_size);
-		destroy_socket(client_socket);
-	}
-	printf("\nCLIENT pinged: %s", msg_buffer);
-	msg_size = write(client_socket, msg_buffer, msg_size);
-	printf("\n(Message echoed back)\n");
-	
-	/*
 	int msg_size = 0;
+	char ch = 'n';
+	char *arp_packet_string;
+	ARP_Packet *arp_packet;
 	do{
-		// BLOCKING routine to wait for a message
-		bzero(msg_buffer, MSG_BUFFER_SIZE);
-		msg_size = read(client_socket, msg_buffer, MSG_BUFFER_SIZE);
+		// Accept Destination Address
+		printf("Enter Destination IP Address: ");
+		scanf(" %s", find_ip);
+		// Accept message
+		printf("Enter 16-bit Message: ");
+		scanf(" %s", msg_buffer);
+		// Prepare request packet
+		arp_packet = make_arp_packet(REQUEST_OPERATION_ID, self_mac, self_ip, EMPTY_MAC_ADDRESS, find_ip);
+		arp_packet_string = serialize_arp_packet(arp_packet);
+		printf("\n%s", arp_packet_string);
+		// Send request packet
+		int msg_size = write(client_socket, arp_packet_string, ARP_PACKET_STRING_SIZE);
+		printf("\nARP-Request broadcasted, waiting for response...\n");
+		msg_size = receive_message(self_socket, msg_buffer, client_addr, &client_addr_len);
+		arp_packet = retrieve_arp_packet(msg_buffer);
+		if(arp_packet==NULL){
+			printf("\nUnexpected response received...\n");
+			printf(" %s\n%s", msg_buffer, client_addr);
+		}
+		else{
+
+		}
 		if (msg_size==0){
 			printf("\nClient shut-down abruptly!\n");
 			destroy_socket(client_socket);
-			break;
 		}
-		// Echo back
-		if (check_termination_init(msg_buffer)){
-			printf("\nClient terminated connection\n");
-			bzero(msg_buffer, MSG_BUFFER_SIZE);
-			msg_size = write(client_socket, TERMINATION_ACK_STRING, msg_size);
-			destroy_socket(client_socket);
-			break;
-		}
-		printf("\nCLIENT pinged: %s", msg_buffer);
-		msg_size = write(client_socket, msg_buffer, msg_size);
-		printf("\n(Message echoed back)\n");
-	}while(1==1);
-	*/
+		printf("\nMore messages to send? (y/n): ");
+		scanf(" %c", &ch);
+	}while(ch!='n');
 
 	destroy_socket(self_socket);
 	return;

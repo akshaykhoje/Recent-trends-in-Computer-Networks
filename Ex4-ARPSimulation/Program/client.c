@@ -20,7 +20,7 @@ void main(){
 	printf("\nEnter Host-IP Address: ");
 	scanf(" %s", server_ip);
 	if (connect_server(self_socket, server_ip) < 0){
-		printf("\nCould not connect to ECHO-Server.\nMake sure the server is running!\n");
+		printf("\nCould not connect to Host.\nMake sure the server is running!\n");
 		destroy_socket(self_socket);
 		return;
 	}
@@ -39,41 +39,31 @@ void main(){
 	scanf(" %s", self_ip);
 	// Allocate message memory
 	char *msg_buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
+	char *arp_packet_string;
 	int msg_size = 0;
-	bzero(msg_buffer, MSG_BUFFER_SIZE);
-	msg_size = read(self_socket, msg_buffer, MSG_BUFFER_SIZE);
-	// Attempt packet read, else print message
-	ARP_Packet *arp_packet = retrieve_arp_packet(msg_buffer);
-	if(arp_packet==NULL){
-		printf("\nMessage from Server: ", msg_buffer);
-	}
-	else{
-		printf("ARP Request Recieved\n%s", msg_buffer);
-		if(is_destn(arp_packet, self_ip)){
-			printf("IP Address Matched");
-		}
-		else{
-			printf("IP Address Did NOT Match");
-		}
-	}
 
-
-	printf("\n\nDelimit Ping Messages with ';'\nEnter 'ENDSESSION;' to terminate connection\n");
 	do {
 		bzero(msg_buffer, MSG_BUFFER_SIZE);
-		printf("\nEnter Ping Message: ");
-		scanf(" %[^;]s", msg_buffer);
-		// Consume the last newline character from read-buffer
-		getchar();   
-		msg_size = write(self_socket, msg_buffer, MSG_BUFFER_SIZE);
-		// Reading back
-		bzero(msg_buffer, MSG_BUFFER_SIZE);
 		msg_size = read(self_socket, msg_buffer, MSG_BUFFER_SIZE);
-		// Check if server acknowledged ENDSESSION
-		if (check_termination_ack(msg_buffer)){
-			printf("\nExiting...\n");
-			break;
+		// Attempt packet read, else print message
+		ARP_Packet *arp_packet = retrieve_arp_packet(msg_buffer);
+		if(arp_packet==NULL){
+			printf("\nMessage from Server: ", msg_buffer);
 		}
-		printf("SERVER echoed: %s\n", msg_buffer, MSG_BUFFER_SIZE);
+		else{
+			printf("ARP Request Recieved\n%s", msg_buffer);
+			if(is_destn(arp_packet, self_ip)){
+				printf("IP Address Matched");
+				arp_packet = make_arp_packet(RESPONSE_OPERATION_ID, self_mac, self_ip, arp_packet->source_MAC, arp_packet->source_IP);
+				arp_packet_string = serialize_arp_packet(arp_packet);
+				printf("\n%s", arp_packet_string);				
+				msg_size = write(self_socket, arp_packet_string, ARP_PACKET_STRING_SIZE);
+				printf("\n(ARP Response Sent)\n");
+			}
+			else{
+				printf("IP Address Did NOT Match");
+			}
+		}
+		fflush(stdout);
 	}while(1==1);
 }
