@@ -66,10 +66,7 @@ void main(){
 	int num_clients = 1;
 	int *client_sockets = (int*)malloc(sizeof(int)*num_clients);
 	*(client_sockets+0) = client_socket;
-	// To keep track of known clients
-	ClientList *known_clients = make_empty_client_list();
-	add_client(client_socket, client_addr, known_clients);
-
+	// Prepare address storage locations
 	char *self_mac = (char*)malloc(sizeof(char)*MAC_ADDRESS_SIZE);
 	char *self_ip = (char*)malloc(sizeof(char)*IP_ADDRESS_SIZE);
 	char *find_mac = (char*)malloc(sizeof(char)*MAC_ADDRESS_SIZE);
@@ -81,7 +78,7 @@ void main(){
 	scanf(" %s", self_mac);
 	printf("Enter Own IP Address: ");
 	scanf(" %s", self_ip);	
-	
+	// Prepare data transmission loop
 	fd_set readable_fds;
 	int msg_size = 0;
 	int response;
@@ -105,7 +102,6 @@ void main(){
 			msg_size = write(client_socket, arp_packet_string, ARP_PACKET_STRING_SIZE);
 		}
 		// BLOCK till some client sends a response
-		printf("\n---------------------------------------------------------------");
 		printf("\nARP-Request broadcasted, waiting for response...\n");		
 		response = wait_for_message(client_sockets, num_clients, &readable_fds);
 		if(response == -9){
@@ -122,16 +118,16 @@ void main(){
 				// This socket is not readable
 				continue;
 			}			
-			msg_size = receive_message(self_socket, msg_buffer, client_addr, &client_addr_len);
+			msg_size = receive_message(read_fd, msg_buffer, client_addr, &client_addr_len);
 			arp_packet = retrieve_arp_packet(msg_buffer);
 			if(arp_packet==NULL){
 				printf("\nUnexpected response received...\n");
 				printf("%s\n%s", msg_buffer);
 			}
 			else{
-				printf("\nARP-Response Received\n%s", msg_data);
-				msg_size = write(client_socket, msg_data, MSG_BUFFER_SIZE);
-				printf("\nData transmitted");
+				printf("\nARP-Response Received\n%s", msg_buffer);
+				msg_size = write(read_fd, msg_data, MSG_BUFFER_SIZE);
+				printf("\n\nData transmitted");
 			}
 		}
 		printf("\nMore messages to send? (y/n): ");
