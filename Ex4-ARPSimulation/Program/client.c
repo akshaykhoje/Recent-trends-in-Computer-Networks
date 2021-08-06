@@ -25,15 +25,15 @@ void main(){
 	scanf(" %s", self_ip);
 
 	char *server_ip = (char*)malloc(sizeof(char)*IP_ADDRESS_SIZE);
-	printf("\nEnter Host-IP Address: ");
+	printf("\nEnter router-IP Address: ");
 	scanf(" %s", server_ip);
 	if (connect_server(self_socket, server_ip) < 0){
-		printf("\nCould not connect to Host.\nMake sure the server is running!\n");
+		printf("\nCould not connect to router.\nMake sure the server is running!\n");
 		destroy_socket(self_socket);
 		return;
 	}
 	else{
-		printf("Connected to Host\n");
+		printf("Connected to router\n");
 	}
 
 	// Allocate message memory
@@ -45,13 +45,13 @@ void main(){
 		bzero(msg_buffer, MSG_BUFFER_SIZE);
 		msg_size = read(self_socket, msg_buffer, MSG_BUFFER_SIZE);
 		if(msg_size==0){
-			printf("\nHost has terminated\nExiting...\n");
+			printf("\nrouter has terminated\nExiting...\n");
 			break;
 		}
 		// Attempt packet read, else print message
 		ARP_Packet *arp_packet = retrieve_arp_packet(msg_buffer);
 		if(arp_packet==NULL){
-			printf("\nMessage from host: %s\n", msg_buffer);
+			printf("\nMessage from router: %s\n", msg_buffer);
 		}
 		else{
 			printf("\n---------------------------------------------");
