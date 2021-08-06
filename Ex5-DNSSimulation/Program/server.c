@@ -44,6 +44,7 @@ void main(){
 	char *client_addr_ip_str = (char*)malloc(sizeof(char)*ADDRESS_BUFFER_SIZE);
 	int client_addr_port;
 	// Data transmission storage locations
+	DNS_Table *dns_entry;
 	char *msg_buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
 	fd_set readable_fds;
 	int msg_size = 0;
@@ -91,6 +92,20 @@ void main(){
 				}
 				
 				printf("\n\nDomain Requested: %s", msg_buffer);
+				dns_entry = get_dns_entry(msg_buffer, dns_table);
+				if(dns_entry==NULL){
+					printf("\nNo IP-Address found");
+					memcpy(msg_buffer, "No IP-Address found", MSG_BUFFER_SIZE);
+					msg_size = send_reply(self_socket, msg_buffer, client_addr, client_addr_len);
+				}
+				else{
+					printf("\nIP-Addresses Responded");
+					for(int i=0;i<dns_entry->num_ips;i++){
+						memcpy(msg_buffer, *(dns_entry->ips+i), MSG_BUFFER_SIZE);
+						msg_size = send_reply(self_socket, msg_buffer, client_addr, client_addr_len);
+					}
+				}
+				
 			}
 		}
 	}while(1==1);
