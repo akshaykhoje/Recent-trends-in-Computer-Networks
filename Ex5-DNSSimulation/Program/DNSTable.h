@@ -29,6 +29,18 @@ DNS_Table* make_dns_entry(char *domain_name, char *ip){
 }
 
 
+DNS_Table* get_entry(char *domain_name, DNS_Table *table){
+	DNS_Table *handle = table;
+	while(handle!=NULL){
+		if(strcmp(domain_name, handle->domain_name)==0){
+			return handle;
+		}
+		handle = handle->next;
+	}
+	return NULL;
+}
+
+
 DNS_Table add_domain(char *domain_name, char *ip, DNS_Table *table){
 	DNS_Table *handle = table;
 	DNS_Table *entry = NULL;
@@ -50,6 +62,7 @@ DNS_Table add_domain(char *domain_name, char *ip, DNS_Table *table){
 		entry->ips = (char**)realloc(entry->ips, sizeof(char*)*(entry->num_ips+1));
 		*(entry->ips+entry->num_ips) = (char*)malloc(sizeof(char)*IP_ADDRESS_SIZE);
 		*(entry->ips+entry->num_ips) = ip;
+		entry->num_ips++;
 	}
 	else{
 		entry = make_dns_entry(domain_name, ip);
@@ -62,3 +75,5 @@ DNS_Table add_domain(char *domain_name, char *ip, DNS_Table *table){
 	}
 	return table;
 }
+
+
