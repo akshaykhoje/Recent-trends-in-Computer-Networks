@@ -5,6 +5,10 @@
 	#include "udp_socket.h"
 #endif	
 
+#ifndef msg_io
+	#include "msg_io.h"
+#endif	
+
 #ifndef DNS_Table_h
 	#include "DNSTable.h"
 #endif
@@ -34,7 +38,12 @@ void main(){
 	int num_sockets = 1;
 	int *server_sockets = (int*)malloc(sizeof(int)*num_sockets);
 	*(server_sockets+0) = self_socket;
-
+	// To store sender-client address
+	struct sockaddr_in *client_addr = malloc(sizeof(struct sockaddr_in));
+	int client_addr_len = sizeof(struct sockaddr_in);
+	char *client_addr_ip_str = (char*)malloc(sizeof(char)*ADDRESS_BUFFER_SIZE);
+	int client_addr_port;
+	// Data transmission storage locations
 	char *msg_buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
 	fd_set readable_fds;
 	int msg_size = 0;
@@ -68,32 +77,25 @@ void main(){
 				printf("\nEmpty message\n");
 			}
 			else if(client_addr_len == -1){
-				printf("\nMessage received from Client.\nCould not read address\n");
+				printf("\nRequest received\nCould not read sender address!\n");
 			}
 			else{
 				// Alternatively, use inet_ntoa
 				inet_ntop(ADDRESS_FAMILY, (void*)&client_addr->sin_addr, client_addr_ip_str, ADDRESS_BUFFER_SIZE);
 				client_addr_port = (int)ntohs(client_addr->sin_port);
 				if (client_addr_ip_str == NULL) {
-					printf("\nMessage received from Client.\nCould not read address\n");
-					continue;
+					printf("\nRequest received\nCould not read sender address!\n");
 				}
 				else{
-					printf("\nMessage received from \nClient (%s:%d): ", client_addr_ip_str, client_addr_port);
+					printf("\nRequest received from %s:%d: ", client_addr_ip_str, client_addr_port);
 				}
-				printf("%s", msg_buffer);
-				// Replying back
-				bzero(msg_buffer, MSG_BUFFER_SIZE);
-				printf("\nEnter Reply: ");
-				scanf(" %[^;]s", msg_buffer);
-				// Consume the last newline character from read-buffer
-				getchar();   
-				msg_size = send_reply(self_socket, msg_buffer, client_addr, client_addr_len);
+				
+				printf("\n\nDomain Requested: %s", msg_buffer);
 			}
 		}
 	}while(1==1);
 
 	destroy_socket(self_socket);
 	return;
-	*/
+	
 }
