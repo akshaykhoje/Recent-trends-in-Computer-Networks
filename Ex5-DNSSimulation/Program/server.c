@@ -5,10 +5,6 @@
 	#include "udp_socket.h"
 #endif	
 
-#ifndef msg_io
-	#include "msg_io.h"
-#endif
-
 #ifndef DNS_Table_h
 	#include "DNSTable.h"
 #endif
@@ -17,7 +13,9 @@
 void main(){
 
 	DNS_Table* dns_table = NULL;
-	add_dns_ip("www.google.com", "192.168.0.1", dns_table);
+	dns_table = add_dns_ip("www.google.com", "192.168.0.1", dns_table);
+	dns_table = add_dns_ip("www.google.com", "192.167.0.1", dns_table);
+	dns_table = add_dns_ip("www.yahoo.com", "192.67.0.1", dns_table);
 	display_dns_table(dns_table);
 	
 	int self_socket = make_socket();
@@ -37,28 +35,19 @@ void main(){
 	int *server_sockets = (int*)malloc(sizeof(int)*num_sockets);
 	*(server_sockets+0) = self_socket;
 
-	// To keep track of known clients
-	ClientList *known_clients = make_empty_client_list();
-	// To store sender-client address
-	struct sockaddr_in *client_addr = malloc(sizeof(struct sockaddr_in));
-	int client_addr_len = sizeof(struct sockaddr_in);
-	char *client_addr_ip_str = (char*)malloc(sizeof(char)*ADDRESS_BUFFER_SIZE);
-	int client_addr_port;
-
 	char *msg_buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
 	fd_set readable_fds;
 	int msg_size = 0;
 	int response;
 	int read_fd;
-	int client_id;
 	do{
 		// BLOCK till some client sends message
 		printf("\n---------------------------------------------------------------");
-		printf("\nServer waiting for client messages from all local interfaces...\n\n");
+		printf("\nServer waiting for DNS request from all local interfaces...\n\n");
 		
 		response = wait_for_message(server_sockets, num_sockets, &readable_fds);
 		if(response == -9){
-			printf("\nTimed out when waiting for messages\nExiting...\n");
+			printf("\nTimed out when waiting for requests\nExiting...\n");
 			break;
 		}
 		else if(response == -8){
@@ -90,19 +79,7 @@ void main(){
 					continue;
 				}
 				else{
-					client_id = find_or_add_client(client_addr, known_clients);
-					if(client_id==-11){
-						printf("\nNew client rejected and acknowledged. Client limit reached!\n");
-						msg_size = send_reply(self_socket, SERVER_REJECT_STRING, client_addr, client_addr_len);
-						continue;
-					}
-					else if(strcmp(msg_buffer, TERMINATION_INIT_STRING)==0){
-						client_id = remove_client(client_addr, known_clients);
-						msg_size = send_reply(self_socket, TERMINATION_ACK_STRING, client_addr, client_addr_len);
-						printf("\nClient-%c (%s:%d) Removed from known clients\n", (65+client_id), client_addr_ip_str, client_addr_port);
-						continue;
-					}
-					printf("\nMessage received from \nClient-%c (%s:%d): ", (65+client_id), client_addr_ip_str, client_addr_port);
+					printf("\nMessage received from \nClient (%s:%d): ", client_addr_ip_str, client_addr_port);
 				}
 				printf("%s", msg_buffer);
 				// Replying back
@@ -118,4 +95,5 @@ void main(){
 
 	destroy_socket(self_socket);
 	return;
+	*/
 }
