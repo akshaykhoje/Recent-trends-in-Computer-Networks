@@ -9,11 +9,16 @@
 	#include "msg_io.h"
 #endif
 
-#ifndef client_list
-	#include "ClientList.h"
+#ifndef DNS_Table_h
+	#include "DNSTable.h"
 #endif
 
+
 void main(){
+
+	DNS_Table* dns_table = NULL;
+	add_dns_ip("www.google.com", "192.168.0.1", dns_table);
+	display_dns_table(dns_table);
 	
 	int self_socket = make_socket();
 	if(self_socket<0){
