@@ -79,6 +79,7 @@ DNS_Table* add_dns_ip(char *domain_name, char *ip, DNS_Table *table){
 
 void display_dns_table(DNS_Table *table){
 	DNS_Table *handle = table;
+	printf("\n     DNS TABLE\n");
 	printf("\n------------------------------------------------------- ");
 	printf("\n|       Domain Name        |        IP Address        |");
 	printf("\n------------------------------------------------------- ");

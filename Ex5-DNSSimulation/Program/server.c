@@ -15,13 +15,33 @@
 
 // Global DNS Table
 DNS_Table* dns_table = NULL;
-dns_table = add_dns_ip("www.google.com", "192.168.0.1", dns_table);
-dns_table = add_dns_ip("www.google.com", "192.167.0.1", dns_table);
-dns_table = add_dns_ip("www.yahoo.com", "192.67.0.1", dns_table);
-display_dns_table(dns_table);
+
+void* update_dns_table(){
+	char response;
+	char *domain_name = (char*)malloc(sizeof(char)*DOMAIN_NAME_SIZE);
+	char *ip_address = (char*)malloc(sizeof(char)*IP_ADDRESS_SIZE);
+	do{
+		scanf(" %c", response);
+		if(response=='u'||response=='U'){
+			printf("\nEnter Domain Name: ");
+			scanf(" %s", domain_name);
+			printf("\nEnter IP Address: ");
+			scanf(" %s", ip_address);
+			dns_table = add_dns_ip(domain_name, ip_address, dns_table);
+			display_dns_table(dns_table);
+		}
+	}while(1==1);
+}
+
 
 void main(){
 	
+	// Populate DNS table
+	dns_table = add_dns_ip("www.google.com", "192.168.0.1", dns_table);
+	dns_table = add_dns_ip("www.google.com", "192.167.0.1", dns_table);
+	dns_table = add_dns_ip("www.yahoo.com", "192.67.0.1", dns_table);
+	display_dns_table(dns_table);
+
 	int self_socket = make_socket();
 	if(self_socket<0){
 		printf("\nCould not create socket. Retry!\n");
@@ -53,7 +73,7 @@ void main(){
 	do{
 		// BLOCK till some client sends message
 		printf("\n---------------------------------------------------------------");
-		printf("\nServer waiting for DNS request from all local interfaces...\n");
+		printf("\nWaiting for DNS requests... Hit 'u' to update DNS table\n");
 		
 		response = wait_for_message(server_sockets, num_sockets, &readable_fds);
 		if(response == -9){
