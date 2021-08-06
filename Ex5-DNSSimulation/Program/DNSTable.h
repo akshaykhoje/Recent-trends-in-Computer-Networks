@@ -52,6 +52,7 @@ DNS_Table* add_dns_ip(char *domain_name, char *ip, DNS_Table *table){
 		}
 		for(int i=0;i<handle->num_ips;i++){
 			if(strcmp(*(handle->ips+i), ip)==0){
+				printf("HERE");
 				return NULL;     // IP already exists
 			}
 		}
@@ -79,7 +80,7 @@ DNS_Table* add_dns_ip(char *domain_name, char *ip, DNS_Table *table){
 
 void display_dns_table(DNS_Table *table){
 	DNS_Table *handle = table;
-	printf("\n     DNS TABLE\n");
+	printf("\n     DNS TABLE");
 	printf("\n------------------------------------------------------- ");
 	printf("\n|       Domain Name        |        IP Address        |");
 	printf("\n------------------------------------------------------- ");

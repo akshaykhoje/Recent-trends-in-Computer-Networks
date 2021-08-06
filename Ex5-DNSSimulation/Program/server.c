@@ -20,6 +20,7 @@ short updating = 0;
 short updated = 0;
 
 void* update_dns_table(){
+	DNS_Table *result = NULL;
 	char response;
 	char *domain_name = (char*)malloc(sizeof(char)*DOMAIN_NAME_SIZE);
 	char *ip_address = (char*)malloc(sizeof(char)*IP_ADDRESS_SIZE);
@@ -31,7 +32,13 @@ void* update_dns_table(){
 			scanf(" %s", domain_name);
 			printf("Enter IP Address: ");
 			scanf(" %s", ip_address);
-			dns_table = add_dns_ip(domain_name, ip_address, dns_table);
+			result = add_dns_ip(domain_name, ip_address, dns_table);
+			if(result==NULL){
+				printf("\nIP Address already exists\n");
+			}
+			else{
+				dns_table = result;
+			}
 			display_dns_table(dns_table);
 			updating--;
 			updated++;

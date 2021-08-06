@@ -111,7 +111,7 @@ void main(){
 
 	pthread_t listener_thread_id;
   	if(pthread_create(&listener_thread_id, NULL, (void*)(accept_connections), NULL)){
-    	printf("\nError while creating thread for AVERAGE\n");
+    	printf("\nError while creating thread for Client Connections\n");
 	}
 
 	// Parent process to handle message transmission
