@@ -13,14 +13,14 @@
 	#include "DNSTable.h"
 #endif
 
+// Global DNS Table
+DNS_Table* dns_table = NULL;
+dns_table = add_dns_ip("www.google.com", "192.168.0.1", dns_table);
+dns_table = add_dns_ip("www.google.com", "192.167.0.1", dns_table);
+dns_table = add_dns_ip("www.yahoo.com", "192.67.0.1", dns_table);
+display_dns_table(dns_table);
 
 void main(){
-
-	DNS_Table* dns_table = NULL;
-	dns_table = add_dns_ip("www.google.com", "192.168.0.1", dns_table);
-	dns_table = add_dns_ip("www.google.com", "192.167.0.1", dns_table);
-	dns_table = add_dns_ip("www.yahoo.com", "192.67.0.1", dns_table);
-	display_dns_table(dns_table);
 	
 	int self_socket = make_socket();
 	if(self_socket<0){
@@ -53,7 +53,7 @@ void main(){
 	do{
 		// BLOCK till some client sends message
 		printf("\n---------------------------------------------------------------");
-		printf("\nServer waiting for DNS request from all local interfaces...\n\n");
+		printf("\nServer waiting for DNS request from all local interfaces...\n");
 		
 		response = wait_for_message(server_sockets, num_sockets, &readable_fds);
 		if(response == -9){
@@ -88,7 +88,7 @@ void main(){
 					printf("\nRequest received\nCould not read sender address!\n");
 				}
 				else{
-					printf("\nRequest received from %s:%d: ", client_addr_ip_str, client_addr_port);
+					printf("\nRequest received from %s:%d", client_addr_ip_str, client_addr_port);
 				}
 				
 				printf("\n\nDomain Requested: %s", msg_buffer);
@@ -105,7 +105,7 @@ void main(){
 						msg_size = send_reply(self_socket, msg_buffer, client_addr, client_addr_len);
 					}
 				}
-				
+				msg_size = send_reply(self_socket, RESPONSE_END_STRING, client_addr, client_addr_len);
 			}
 		}
 	}while(1==1);
