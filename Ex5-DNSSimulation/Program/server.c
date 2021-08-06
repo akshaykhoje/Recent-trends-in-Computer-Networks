@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<pthread.h>
 
 #ifndef udp_socket
 	#include "udp_socket.h"
@@ -15,21 +16,27 @@
 
 // Global DNS Table
 DNS_Table* dns_table = NULL;
+short updating = 0;
+short updated = 0;
 
 void* update_dns_table(){
 	char response;
 	char *domain_name = (char*)malloc(sizeof(char)*DOMAIN_NAME_SIZE);
 	char *ip_address = (char*)malloc(sizeof(char)*IP_ADDRESS_SIZE);
 	do{
-		scanf(" %c", response);
+		scanf(" %c", &response);
 		if(response=='u'||response=='U'){
+			updating++;
 			printf("\nEnter Domain Name: ");
 			scanf(" %s", domain_name);
-			printf("\nEnter IP Address: ");
+			printf("Enter IP Address: ");
 			scanf(" %s", ip_address);
 			dns_table = add_dns_ip(domain_name, ip_address, dns_table);
 			display_dns_table(dns_table);
+			updating--;
+			updated++;
 		}
+		response = 'z';
 	}while(1==1);
 }
 
@@ -52,6 +59,11 @@ void main(){
 		printf("\nCould not bind server socket. Retry!\n");
 		destroy_socket(self_socket);
 		return;
+	}
+
+	pthread_t updater_thread_id;
+  	if(pthread_create(&updater_thread_id, NULL, (void*)(update_dns_table), NULL)){
+    	printf("\nError while creating thread for DNS Table Updation\n");
 	}
 
 	// Keep track of all server sockets.
@@ -77,6 +89,13 @@ void main(){
 		
 		response = wait_for_message(server_sockets, num_sockets, &readable_fds);
 		if(response == -9){
+			if(updated>0){
+				updated--;
+				continue;
+			}
+			if(updating){
+				continue;
+			}
 			printf("\nTimed out when waiting for requests\nExiting...\n");
 			break;
 		}
