@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<pthread.h>
+#include<regex.h>
 
 #ifndef udp_socket
 	#include "udp_socket.h"
@@ -50,6 +51,9 @@ void* update_dns_table(){
 
 void main(){
 	
+	printf("%d", validate_IP("192.168.01.1"));
+	printf("%d", validate_IP("192.168.111.111"));
+
 	// Populate DNS table
 	dns_table = add_dns_ip("www.google.com", "192.168.0.1", dns_table);
 	dns_table = add_dns_ip("www.google.com", "192.167.0.1", dns_table);

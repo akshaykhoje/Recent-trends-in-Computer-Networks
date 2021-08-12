@@ -5,6 +5,7 @@
 #define IP_ADDRESS_SIZE 20
 
 #include<stdlib.h>
+#include<ctype.h>
 
 // NULL-based Linked-List
 struct dns_table{
@@ -98,6 +99,52 @@ void display_dns_table(DNS_Table *table){
 		handle = handle->next;
 	}
 	printf("\n\n");
+}
+
+short validate_IP(char *ip){
+	/* Return 1 if valid IP, 0 otherwise */
+	int quad_1 = -1;
+	int quad_2 = -1;
+	int quad_3 = -1;
+	int quad_4 = -1;
+	sscanf(ip,
+		"%d.%d.%d.%d", 
+		&quad_1,
+		&quad_2,
+		&quad_3,
+		&quad_4
+	);
+	if(quad_1<0 || quad_1>255 || quad_2<0 || quad_2>255 ||
+		 quad_3<0 || quad_3>255 || quad_4<0 || quad_4>255){
+			return 0;      // Invalid IP
+	}
+	else{
+		char *parser = ip;
+		// Assume dot at beginning of string
+		int dot = 1;   
+		int zero_start = 0;
+		while(*parser!='\0'){
+			if(zero_start && isdigit(*parser)){
+				return 0;    // Invalid IP
+			}
+			// zero-start flag
+			if(dot && *parser=='0'){
+				zero_start = 1;
+			}
+			else{
+				zero_start = 0;
+			}
+			// dot flag
+			if(*parser=='.'){
+				dot = 1;
+			}
+			else{
+				dot = 0;
+			}
+			parser++;
+		}
+	}
+	return 1;
 }
 
 #endif
