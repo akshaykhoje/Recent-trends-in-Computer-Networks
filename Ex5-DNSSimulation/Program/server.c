@@ -33,13 +33,18 @@ void* update_dns_table(){
 			scanf(" %s", domain_name);
 			printf("Enter IP Address: ");
 			scanf(" %s", ip_address);
-			result = add_dns_ip(domain_name, ip_address, dns_table);
-			if(result==NULL){
-				printf("\nIP Address already exists\n");
+			if(!validate_IP(ip_address)){
+				printf("\nInvalid IP Address\n");
 			}
-			else{
-				dns_table = result;
-			}
+			else{				
+				result = add_dns_ip(domain_name, ip_address, dns_table);
+				if(result==NULL){
+					printf("\nIP Address already exists\n");
+				}
+				else{
+					dns_table = result;
+				}
+			}			
 			display_dns_table(dns_table);
 			updating--;
 			updated++;
@@ -51,9 +56,6 @@ void* update_dns_table(){
 
 void main(){
 	
-	printf("%d", validate_IP("192.168.01.1"));
-	printf("%d", validate_IP("192.168.111.111"));
-
 	// Populate DNS table
 	dns_table = add_dns_ip("www.google.com", "192.168.0.1", dns_table);
 	dns_table = add_dns_ip("www.google.com", "192.167.0.1", dns_table);
