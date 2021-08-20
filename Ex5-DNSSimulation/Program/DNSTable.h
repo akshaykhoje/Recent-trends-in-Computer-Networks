@@ -53,7 +53,6 @@ DNS_Table* add_dns_ip(char *domain_name, char *ip, DNS_Table *table){
 		}
 		for(int i=0;i<handle->num_ips;i++){
 			if(strcmp(*(handle->ips+i), ip)==0){
-				printf("HERE");
 				return NULL;     // IP already exists
 			}
 		}
