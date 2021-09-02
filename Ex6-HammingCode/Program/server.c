@@ -8,11 +8,6 @@
 #endif
 
 void main(){
-
-	printf("HERE");
-	printf("\n%s", encode_hamming_message("11001"));
-	printf("HERE");
-	printf("\n%s", decode_hamming_message("110001101"));
 	
 	int self_socket = make_socket();
 	if(self_socket<0){
@@ -61,10 +56,16 @@ void main(){
 	}
 
 	char *msg_buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
+	int r_value;
 	int msg_size = 0;
 	do{
-		// BLOCKING routine to wait for a message
 		bzero(msg_buffer, MSG_BUFFER_SIZE);
+		printf("\nEnter Data: ");
+		scanf(" %s", msg_buffer);
+		msg_buffer = encode_hamming_message(msg_buffer, &r_value, &msg_size);
+		msg_size = write(client_socket, msg_buffer, msg_size);
+		printf("\n(Data transmitted)\n");
+		/*
 		msg_size = read(client_socket, msg_buffer, MSG_BUFFER_SIZE);
 		if (msg_size==0){
 			printf("\nClient shut-down abruptly!\n");
@@ -82,6 +83,7 @@ void main(){
 		printf("\nCLIENT pinged: %s", msg_buffer);
 		msg_size = write(client_socket, msg_buffer, msg_size);
 		printf("\n(Message echoed back)\n");
+		*/
 	}while(1==1);
 
 	destroy_socket(self_socket);

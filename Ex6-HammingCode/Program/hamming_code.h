@@ -42,7 +42,6 @@ int binary_to_decimal(char *binary){
 	int posn = 0;
 	char *parser = binary;
 	while(*parser!='\0'){
-		printf("BIN: %d", *parser);
 		decimal_num += raise_to_power(2, posn)*(*parser - 48);
 		posn++;
 		parser++;
@@ -125,7 +124,8 @@ char* remove_redundant_bits(char* rev_merged_msg, int msg_size, int r_val){
 }
 
 
-char* encode_hamming_message(char* raw_msg){
+char* encode_hamming_message(char* raw_msg, int *r_value, int *enc_msg_size){
+	// r_value is used to return the r_value
 	// msg_size is the size of raw message
 	int msg_size = strlen(raw_msg);
 	int r_val = find_r_value_from_rawmsg(msg_size);
@@ -137,6 +137,9 @@ char* encode_hamming_message(char* raw_msg){
 	for(int r=0;r<r_val;r++){
 		*(rev_merged_msg+raise_to_power(2, r)-1) = 48 + find_even_parity(rev_merged_msg, msg_size+r_val, r, 1);
 	}
+	// Return the r_value
+	*r_value = r_val;
+	*enc_msg_size = r_val + msg_size; 
 	// Reverse-back the merged string
 	return reverse_string(rev_merged_msg);
 }
