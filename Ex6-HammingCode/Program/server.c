@@ -56,7 +56,6 @@ void main(){
 	}
 
 	char *msg_buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
-	char *error_free_msg = NULL;
 	int r_value;
 	int msg_size = 0;
 	printf("\n\nEnter 'ENDSESSION' to terminate connection\n");
@@ -69,9 +68,14 @@ void main(){
 			destroy_socket(client_socket);
 			break;
 		}
-		msg_buffer = encode_hamming_message(msg_buffer, &r_value, &msg_size, &error_free_msg);
+		printf("\nMAIN1");
+		fflush(stdout);
+		msg_buffer = encode_hamming_message(msg_buffer, &r_value, &msg_size);
+		printf("\nMAIN2");
+		fflush(stdout);
 		printf("Number of redundant-bits requied: %d", r_value);
-		printf("\nHamming encoded message (no error): %s", error_free_msg);
+		printf("\nHamming encoded message (no error): %s", msg_buffer);
+		//msg_buffer = pass_noise(msg_buffer, msg_size);
 		printf("\n Message after adding random noise: %s", msg_buffer);
 		msg_size = write(client_socket, msg_buffer, msg_size);
 		printf("\n(Data transmitted)\n");

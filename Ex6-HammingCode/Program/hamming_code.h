@@ -25,13 +25,16 @@ char* pass_noise(char *encoded_msg, int msg_size){
 	return noisy_msg;
 }
 
-char* reverse_string(char *string){
-	int size = strlen(string);
-	char *rev_string = (char*)malloc(sizeof(char)*size);
-	for(int i=0;i<size;i++){
-		*(rev_string+i) = *(string+size-i-1);
-	}
-	return rev_string;
+char* reverse_string(char *orig_string){
+	char *p1, *p2;
+      if (!orig_string || ! *orig_string)
+            return orig_string;
+      for (p1 = orig_string, p2 = orig_string + strlen(orig_string) - 1; p2 > p1; ++p1, --p2){
+            *p1 ^= *p2;
+            *p2 ^= *p1;
+            *p1 ^= *p2;
+      }
+      return orig_string;
 }
 
 int raise_to_power(int base, int exp){
@@ -143,27 +146,38 @@ char* remove_redundant_bits(char* rev_merged_msg, int msg_size, int r_val){
 }
 
 
-char* encode_hamming_message(char* raw_msg, int *r_value, int *enc_msg_size, char **enc_msg){
+char* encode_hamming_message(char* raw_msg, int *r_value, int *enc_msg_size){
 	// r_value is used to return the r_value
 	// msg_size is the size of raw message
+
+	printf("\nDONE");
+	fflush(stdout);
 	int msg_size = strlen(raw_msg);
+
+	printf("\nDONE");
+	fflush(stdout);
 	int r_val = find_r_value_from_rawmsg(msg_size);
+	printf("\nDONE-3");
+	fflush(stdout);
 	// Reverse the raw message for convenience
 	char *rev_raw_msg = reverse_string(raw_msg);
+	printf("\nDONE-4");
+	fflush(stdout);
 	// Insert the redundant bits
 	char *rev_merged_msg = position_redundant_bits(rev_raw_msg, msg_size, r_val);
+	printf("\nDONE-3");
+	fflush(stdout);
 	// Set parity values to the redundant bits
 	for(int r=0;r<r_val;r++){
-		*(rev_merged_msg+raise_to_power(2, r)-1) = 48 + find_even_parity(rev_merged_msg, msg_size+r_val, r, 1);
+		*(rev_merged_msg+(raise_to_power(2, r)-1)) = 48 + find_even_parity(rev_merged_msg, msg_size+r_val, r, 1);
 	}
-	// Return the r_value
+	printf("\nDONE-3");
+	fflush(stdout);
+	// Return the r_value and full message size
 	*r_value = r_val;
 	*enc_msg_size = r_val + msg_size; 
 	// Reverse-back the merged string
-	rev_merged_msg = reverse_string(rev_merged_msg);
-	*enc_msg = rev_merged_msg;
-	rev_merged_msg = pass_noise(rev_merged_msg, *enc_msg_size);
-	return rev_merged_msg;
+	return reverse_string(rev_merged_msg);
 }
 
 char* decode_hamming_message(char *merged_msg, char **redundant_bits){
@@ -175,7 +189,7 @@ char* decode_hamming_message(char *merged_msg, char **redundant_bits){
 	// Compute parities
 	char* error_posn_binary = (char*)malloc(sizeof(char)*r_val);
 	for(int r=0;r<r_val;r++){
-		*(error_posn_binary+r_val-r-1) = 48 + find_even_parity(rev_merged_msg, msg_size, r, 0);
+		*(error_posn_binary+r) = 48 + find_even_parity(rev_merged_msg, msg_size, r, 0);
 	}
 	int correction_posn = binary_to_decimal(error_posn_binary);
 	if(correction_posn!=0){

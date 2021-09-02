@@ -28,6 +28,8 @@ int make_socket(){
 	// SOCK_STREAM specifies two-way byte-stream
 	// 0 selects default protocol
 	int sock_fd = socket(ADDRESS_FAMILY, SOCK_STREAM, 0);
+	int true_flag = 1;
+	setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, &true_flag, sizeof(int));
 	if (sock_fd == -1){
 		return -2;    // Could not create socket
 	}
