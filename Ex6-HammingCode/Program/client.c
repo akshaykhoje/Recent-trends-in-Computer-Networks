@@ -19,18 +19,17 @@ void main(){
 	printf("\nEnter Server IP Address: ");
 	scanf(" %s", server_ip);
 	if (connect_server(self_socket, server_ip) < 0){
-		printf("\nCould not connect to ECHO-Server.\nMake sure the server is running!\n");
+		printf("\nCould not connect to Server.\nMake sure the server is running!\n");
 		destroy_socket(self_socket);
 		return;
 	}
 	else{
-		printf("\nConnected to ECHO-Server");
+		printf("\nConnected to Server");
 	}
 
 	char *msg_buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
 	char *redundant_bits = NULL;
 	int msg_size = 0;
-	printf("\n\nDelimit Ping Messages with ';'\nEnter 'ENDSESSION;' to terminate connection\n");
 	do {
 		bzero(msg_buffer, MSG_BUFFER_SIZE);
 		msg_size = read(self_socket, msg_buffer, MSG_BUFFER_SIZE);
