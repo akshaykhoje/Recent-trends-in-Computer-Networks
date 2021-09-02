@@ -40,9 +40,9 @@ char* reverse_string(char *string){
 
 int find_r_value(int msg_size){
 	// Deduce r from 2^r >= m+r+1
-	for(int r=0;i<m;i++){
-		if raise_to_power(2, r) >= m+r+1{
-			return r
+	for(int r=0;r<msg_size;r++){
+		if(raise_to_power(2, r) >= msg_size+r+1){
+			return r;
 		}
 	}
 	return -1;  // Not found. Syntactic statement - never reached
@@ -51,7 +51,7 @@ int find_r_value(int msg_size){
 char* position_redundant_bits(char* rev_raw_msg, int msg_size, int r_val){
 	// Redundant bits are set to 0 initially
 	// raw_msg is given in reverse
-	char *merged_msg = (char*)malloc(sizeof(char)*(msg_size+r_val);
+	char *merged_msg = (char*)malloc(sizeof(char)*(msg_size+r_val));
 	for(int i=0, curr_r=0; i<(msg_size+r_val); i++){
 		if(raise_to_power(2, curr_r)==(i+1)){  
 			// This is a redundant bit
