@@ -15,6 +15,15 @@ char* reverse_string(char *string){
 	return rev_string;
 }
 
+int raise_to_power(int base, int exp){
+	// Only for positive exp
+	int result = 1;
+	for(int i=0;i<exp;i++){
+		result *= base;
+	}
+	return result;
+}
+
 char* decimal_to_binary(int num){
 	// Result is returned in reverse order
 	// Eg: 6 -> 011
@@ -33,19 +42,12 @@ int binary_to_decimal(char *binary){
 	int posn = 0;
 	char *parser = binary;
 	while(*parser!='\0'){
+		printf("BIN: %d", *parser);
 		decimal_num += raise_to_power(2, posn)*(*parser - 48);
 		posn++;
+		parser++;
 	}
 	return decimal_num;
-}
-
-int raise_to_power(int base, int exp){
-	// Only for positive exp
-	int result = 1;
-	for(int i=0;i<exp;i++){
-		result *= base;
-	}
-	return result;
 }
 
 int find_r_value_from_rawmsg(int msg_size){
@@ -119,7 +121,7 @@ char* remove_redundant_bits(char* rev_merged_msg, int msg_size, int r_val){
 			*(rev_raw_msg+i-curr_r) = *(rev_merged_msg+i);
 		}
 	}
-	return rev_merged_msg;
+	return rev_raw_msg;
 }
 
 
@@ -139,7 +141,7 @@ char* encode_hamming_message(char* raw_msg){
 	return reverse_string(rev_merged_msg);
 }
 
-char* decode_hamming_msg(char *merged_msg){
+char* decode_hamming_message(char *merged_msg){
 	// msg_size is the size of merged message
 	int msg_size = strlen(merged_msg);
 	int r_val = find_r_value_from_hammingmsg(msg_size);
@@ -148,7 +150,7 @@ char* decode_hamming_msg(char *merged_msg){
 	// Compute parities
 	char* error_posn_binary = (char*)malloc(sizeof(char)*r_val);
 	for(int r=0;r<r_val;r++){
-		*(error_posn_binary+r) = find_even_parity(rev_merged_msg, msg_size, r, 0));
+		*(error_posn_binary+r_val-r-1) = 48 + find_even_parity(rev_merged_msg, msg_size, r, 0);
 	}
 	int correction_posn = binary_to_decimal(error_posn_binary);
 	if(correction_posn!=0){
@@ -159,7 +161,7 @@ char* decode_hamming_msg(char *merged_msg){
 			*(rev_merged_msg+correction_posn-1) = '0';
 		}
 	}
-	return reverse_string(remove_redundant_bits(rev_merged_msg));
+	return reverse_string(remove_redundant_bits(rev_merged_msg, msg_size, r_val));
 }
 
 #endif

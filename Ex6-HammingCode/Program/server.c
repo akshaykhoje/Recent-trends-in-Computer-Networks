@@ -9,8 +9,10 @@
 
 void main(){
 
-	encode_hamming_message("1100101");
-	printf("%s", decode_hamming_message("11110101101"));
+	printf("HERE");
+	printf("\n%s", encode_hamming_message("11001"));
+	printf("HERE");
+	printf("\n%s", decode_hamming_message("110001101"));
 	
 	int self_socket = make_socket();
 	if(self_socket<0){
