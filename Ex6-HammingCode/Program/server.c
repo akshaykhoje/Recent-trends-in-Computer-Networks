@@ -63,6 +63,8 @@ void main(){
 		printf("\nEnter Data: ");
 		scanf(" %s", msg_buffer);
 		msg_buffer = encode_hamming_message(msg_buffer, &r_value, &msg_size);
+		printf("\nNumber of redundant-bits requied: %d", r_value);
+		printf("\nHamming encoded message: %s", msg_buffer);
 		msg_size = write(client_socket, msg_buffer, msg_size);
 		printf("\n(Data transmitted)\n");
 		/*
