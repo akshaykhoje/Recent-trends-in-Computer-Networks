@@ -51,15 +51,17 @@ int find_r_value(int msg_size){
 short find_even_parity(char *rev_merged_msg, int msg_size, int rbit_num){
 	// Find's the even parity for posns relevant to rbit_num
 	// msg_size is the entire size of merged message
-	int start_at = raise_to_power(2, rbit_posn+1);
+	int start_at = raise_to_power(2, rbit_num);
 	// Exclude the r-bit itself
-	// Eg: for r2 (rbit_num=1), exclude position-4 (index-3 in the reversed msg)
-	count_ones = 0;
-	for(i=start_at;i<msg_size;i++){
+	// Eg: for r2 (rbit_num=1), exclude upto position-2 (index-1 in the reversed msg)
+	int count_ones = 0;
+	for(int i=start_at;i<msg_size;i++){
 		// i is the index. posn=i+1
-		if(decimal_to_binary(i+1)[rbit_num]==1){
+		if(decimal_to_binary(i+1)[rbit_num]=='1'){
+			printf("\nChecking Posn-%d (bin:%s)", i+1, decimal_to_binary(i+1));
 			if(*(rev_merged_msg+i)=='1'){
 				count_ones++;
+				printf("INCRE");
 			}
 		}
 	}
@@ -88,11 +90,12 @@ void make_hamming_message(char* raw_msg){
 	int msg_size = strlen(raw_msg);
 	int r_val = find_r_value(msg_size);
 	char *rev_raw_msg = reverse_string(raw_msg);
-	char *rev_merged_msg = position_redundant_bits(rev_raw_msg, msg_size, r_val));
-	for(r=0;r<r_val;r++){
-		*(rev_merged_msg+raise_to_power(2, r)-1) = 48 + find_even_parity(rev_merged_msg, msg_size+r_val+r);
+	char *rev_merged_msg = position_redundant_bits(rev_raw_msg, msg_size, r_val);
+	for(int r=0;r<r_val;r++){
+		*(rev_merged_msg+raise_to_power(2, r)-1) = 48 + find_even_parity(rev_merged_msg, msg_size+r_val, r);
+		printf("\nPosn-%d set to %d", raise_to_power(2, r), find_even_parity(rev_merged_msg, msg_size+r_val, r));
 	}
-	printf("%s", rev_merged_msg);
+	printf("\n%s", reverse_string(rev_merged_msg));
 }
 
 #endif
