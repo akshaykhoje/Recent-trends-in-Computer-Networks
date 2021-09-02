@@ -3,6 +3,10 @@
 
 #include "tcp_socket.h"
 
+#ifndef hamming_code_h
+	#include "hamming_code.h"
+#endif
+
 void main(){
 
 	int self_socket = make_socket();
@@ -24,15 +28,18 @@ void main(){
 	}
 
 	char *msg_buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
+	char *redundant_bits;
 	int msg_size = 0;
 	printf("\n\nDelimit Ping Messages with ';'\nEnter 'ENDSESSION;' to terminate connection\n");
 	do {
-		bzero(msg_buffer, MSG_BUFFER_SIZE);
+		
+		/*
 		printf("\nEnter Ping Message: ");
 		scanf(" %[^;]s", msg_buffer);
 		// Consume the last newline character from read-buffer
 		getchar();   
 		msg_size = write(self_socket, msg_buffer, MSG_BUFFER_SIZE);
+		*/
 		// Reading back
 		bzero(msg_buffer, MSG_BUFFER_SIZE);
 		msg_size = read(self_socket, msg_buffer, MSG_BUFFER_SIZE);
@@ -41,6 +48,9 @@ void main(){
 			printf("\nExiting...\n");
 			break;
 		}
-		printf("SERVER echoed: %s\n", msg_buffer, MSG_BUFFER_SIZE);
+		printf("Data received: %s\n", msg_buffer);
+		msg_buffer = decode_hamming_message(msg_buffer, redundant_bits);
+		printf("\nRedundant bits computed: %s", redundant_bits);
+		printf("\nCorrected data: %s", msg_buffer);
 	}while(1==1);
 }
