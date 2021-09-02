@@ -4,7 +4,26 @@
 #include<stdlib.h>
 #include<string.h>
 #include<math.h>
+#include<time.h>
 
+
+char* pass_noise(char *encoded_msg, int msg_size){
+	char* noisy_msg = (char*)malloc(sizeof(char)*msg_size);
+	memcpy(noisy_msg, encoded_msg, msg_size);
+	int range = msg_size*2;
+	srand(time(0));
+	int posn = rand()%msg_size;
+	if(posn<msg_size){
+		// Add error
+		if(*(noisy_msg+posn)=='1'){
+			*(noisy_msg+posn) = '0';
+		}
+		else{
+			*(noisy_msg+posn) = '1';
+		}
+	}
+	return noisy_msg;
+}
 
 char* reverse_string(char *string){
 	int size = strlen(string);
@@ -124,7 +143,7 @@ char* remove_redundant_bits(char* rev_merged_msg, int msg_size, int r_val){
 }
 
 
-char* encode_hamming_message(char* raw_msg, int *r_value, int *enc_msg_size){
+char* encode_hamming_message(char* raw_msg, int *r_value, int *enc_msg_size, char **enc_msg){
 	// r_value is used to return the r_value
 	// msg_size is the size of raw message
 	int msg_size = strlen(raw_msg);
@@ -141,7 +160,10 @@ char* encode_hamming_message(char* raw_msg, int *r_value, int *enc_msg_size){
 	*r_value = r_val;
 	*enc_msg_size = r_val + msg_size; 
 	// Reverse-back the merged string
-	return reverse_string(rev_merged_msg);
+	rev_merged_msg = reverse_string(rev_merged_msg)
+	*enc_msg = rev_merged_msg;
+	pass_noise(rev_merged_msg);
+	return rev_merged_msg;
 }
 
 char* decode_hamming_message(char *merged_msg, char **redundant_bits){

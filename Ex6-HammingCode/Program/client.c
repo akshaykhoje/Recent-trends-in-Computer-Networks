@@ -34,7 +34,6 @@ void main(){
 	do {
 		bzero(msg_buffer, MSG_BUFFER_SIZE);
 		msg_size = read(self_socket, msg_buffer, MSG_BUFFER_SIZE);
-		// Check if server acknowledged ENDSESSION
 		if (msg_size==0){
 			printf("\nServer exited...\n");
 			break;

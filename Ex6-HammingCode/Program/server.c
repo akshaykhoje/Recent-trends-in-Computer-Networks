@@ -72,25 +72,6 @@ void main(){
 		printf("\nHamming encoded message: %s", msg_buffer);
 		msg_size = write(client_socket, msg_buffer, msg_size);
 		printf("\n(Data transmitted)\n");
-		/*
-		msg_size = read(client_socket, msg_buffer, MSG_BUFFER_SIZE);
-		if (msg_size==0){
-			printf("\nClient shut-down abruptly!\n");
-			destroy_socket(client_socket);
-			break;
-		}
-		// Echo back
-		if (check_termination_init(msg_buffer)){
-			printf("\nClient terminated connection\n");
-			bzero(msg_buffer, MSG_BUFFER_SIZE);
-			msg_size = write(client_socket, TERMINATION_ACK_STRING, msg_size);
-			destroy_socket(client_socket);
-			break;
-		}
-		printf("\nCLIENT pinged: %s", msg_buffer);
-		msg_size = write(client_socket, msg_buffer, msg_size);
-		printf("\n(Message echoed back)\n");
-		*/
 	}while(1==1);
 
 	destroy_socket(self_socket);
