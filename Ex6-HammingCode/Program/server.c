@@ -3,7 +3,13 @@
 
 #include "tcp_socket.h"
 
+#ifndef hamming_code_h
+	#include "hamming_code.h"
+#endif
+
 void main(){
+
+
 	
 	int self_socket = make_socket();
 	if(self_socket<0){
