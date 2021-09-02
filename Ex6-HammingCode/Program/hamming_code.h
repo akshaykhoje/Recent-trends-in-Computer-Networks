@@ -160,9 +160,9 @@ char* encode_hamming_message(char* raw_msg, int *r_value, int *enc_msg_size, cha
 	*r_value = r_val;
 	*enc_msg_size = r_val + msg_size; 
 	// Reverse-back the merged string
-	rev_merged_msg = reverse_string(rev_merged_msg)
+	rev_merged_msg = reverse_string(rev_merged_msg);
 	*enc_msg = rev_merged_msg;
-	pass_noise(rev_merged_msg);
+	rev_merged_msg = pass_noise(rev_merged_msg, *enc_msg_size);
 	return rev_merged_msg;
 }
 
