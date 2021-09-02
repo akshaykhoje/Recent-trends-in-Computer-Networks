@@ -28,29 +28,21 @@ void main(){
 	}
 
 	char *msg_buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
-	char *redundant_bits;
+	char *redundant_bits = NULL;
 	int msg_size = 0;
 	printf("\n\nDelimit Ping Messages with ';'\nEnter 'ENDSESSION;' to terminate connection\n");
 	do {
-		
-		/*
-		printf("\nEnter Ping Message: ");
-		scanf(" %[^;]s", msg_buffer);
-		// Consume the last newline character from read-buffer
-		getchar();   
-		msg_size = write(self_socket, msg_buffer, MSG_BUFFER_SIZE);
-		*/
-		// Reading back
 		bzero(msg_buffer, MSG_BUFFER_SIZE);
 		msg_size = read(self_socket, msg_buffer, MSG_BUFFER_SIZE);
 		// Check if server acknowledged ENDSESSION
-		if (check_termination_ack(msg_buffer)){
-			printf("\nExiting...\n");
+		if (msg_size==0){
+			printf("\nServer exited...\n");
 			break;
 		}
 		printf("Data received: %s\n", msg_buffer);
-		msg_buffer = decode_hamming_message(msg_buffer, redundant_bits);
-		printf("\nRedundant bits computed: %s", redundant_bits);
+		msg_buffer = decode_hamming_message(msg_buffer, &redundant_bits);
+		printf("Redundant bits computed: %s", redundant_bits);
 		printf("\nCorrected data: %s", msg_buffer);
+		fflush(stdout);
 	}while(1==1);
 }

@@ -144,7 +144,7 @@ char* encode_hamming_message(char* raw_msg, int *r_value, int *enc_msg_size){
 	return reverse_string(rev_merged_msg);
 }
 
-char* decode_hamming_message(char *merged_msg, char *redundant_bits){
+char* decode_hamming_message(char *merged_msg, char **redundant_bits){
 	// msg_size is the size of merged message
 	int msg_size = strlen(merged_msg);
 	int r_val = find_r_value_from_hammingmsg(msg_size);
@@ -165,7 +165,7 @@ char* decode_hamming_message(char *merged_msg, char *redundant_bits){
 		}
 	}
 	// Return the redundant bits
-	redundant_bits = error_posn_binary;
+	*redundant_bits = error_posn_binary;
 	return reverse_string(remove_redundant_bits(rev_merged_msg, msg_size, r_val));
 }
 
