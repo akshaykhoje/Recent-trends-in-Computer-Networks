@@ -28,17 +28,16 @@ void main(){
 	}
 
 	char *msg_buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
-	char *redundant_bits = NULL;
+	char *redundant_bits = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
 	int msg_size = 0;
 	do {
-		bzero(msg_buffer, MSG_BUFFER_SIZE);
 		msg_size = read(self_socket, msg_buffer, MSG_BUFFER_SIZE);
 		if (msg_size==0){
 			printf("\nServer exited...\n");
 			break;
 		}
-		printf("Data received: %s\n", msg_buffer);
-		msg_buffer = decode_hamming_message(msg_buffer, &redundant_bits);
+		printf("\n\nData received: %s\n", msg_buffer);
+		msg_buffer = decode_hamming_message(msg_buffer, redundant_bits);
 		printf("Redundant bits computed: %s", redundant_bits);
 		printf("\nCorrected data: %s", msg_buffer);
 		fflush(stdout);
