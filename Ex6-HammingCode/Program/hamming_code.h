@@ -186,7 +186,6 @@ char* decode_hamming_message(char *merged_msg, char *redundant_bits){
 			*(rev_merged_msg+correction_posn-1) = '0';
 		}
 	}
-	printf("\n%s", rev_merged_msg);
 	// Return the redundant bits
 	memcpy(redundant_bits, error_posn_binary, r_val);
 	return reverse_string(remove_redundant_bits(rev_merged_msg, msg_size, r_val));
