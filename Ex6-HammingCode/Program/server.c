@@ -55,10 +55,12 @@ void main(){
 	}
 
 	char *msg_buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
-	int r_value;
 	int msg_size = 0;
+	int error_posn;
+	char ch;
 	printf("\n\nEnter 'ENDSESSION' to terminate connection\n");
 	do{
+		printf("\n--------------------------------------------------\n");
 		printf("\nEnter Data: ");
 		scanf(" %s", msg_buffer);
 		if (check_termination_init(msg_buffer)){
@@ -66,11 +68,21 @@ void main(){
 			destroy_socket(client_socket);
 			break;
 		}
-		msg_buffer = encode_hamming_message(msg_buffer, &r_value, &msg_size);
-		printf("Number of redundant-bits required: %d", r_value);
-		printf("\nHamming encoded message (no error): %s", msg_buffer);
-		msg_buffer = pass_noise(msg_buffer, msg_size);
-		printf("\n Message after adding random noise: %s", msg_buffer);
+		msg_buffer = encode_hamming_message(msg_buffer, &msg_size, 1);
+		// Add error if user specifies
+		printf("\n\nDo you want to add error? (y/n): ");
+		scanf(" %c", &ch);
+		if(ch=='y'){
+			printf("Hamming encoded message (no error): %s", msg_buffer);
+			msg_buffer = pass_noise(msg_buffer, msg_size, &error_posn);
+			printf("\n Message after adding random noise: %s", msg_buffer);
+			printf("\nError added at position: %d", error_posn);
+		}
+		else{
+			// No error is added
+			printf("Hamming encoded message (no error): %s", msg_buffer);
+		}
+		// Send the data bits
 		msg_size = write(client_socket, msg_buffer, msg_size);
 		printf("\n(Data transmitted)\n");
 	}while(1==1);

@@ -7,21 +7,20 @@
 #include<time.h>
 
 
-char* pass_noise(char *encoded_msg, int msg_size){
+char* pass_noise(char *encoded_msg, int msg_size, int *err_posn){
 	char* noisy_msg = (char*)malloc(sizeof(char)*msg_size);
 	memcpy(noisy_msg, encoded_msg, msg_size);
-	int range = msg_size*2;
 	srand(time(0));
-	int posn = rand()%range;
-	if(posn<msg_size){
-		// Add error, change bit
-		if(*(noisy_msg+posn)=='1'){
-			*(noisy_msg+posn) = '0';
-		}
-		else{
-			*(noisy_msg+posn) = '1';
-		}
+	int posn = rand()%msg_size;
+	// Add error, change bit
+	if(*(noisy_msg+posn)=='1'){
+		*(noisy_msg+posn) = '0';
 	}
+	else{
+		*(noisy_msg+posn) = '1';
+	}
+	// Return reversed error posn and the noisy message
+	*err_posn = msg_size - posn;
 	return noisy_msg;
 }
 
@@ -81,15 +80,17 @@ int find_r_value_from_rawmsg(int msg_size){
 
 int find_r_value_from_hammingmsg(int msg_size){
 	// Deduce r from 2^r >= m+r+1
+	int m;
 	for(int r=0;r<msg_size;r++){
-		if(raise_to_power(2, r) >= msg_size){
+		m = msg_size - r;
+		if(raise_to_power(2, r) >= m+r+1){
 			return r;
 		}
 	}
 	return -1;  // Not found. Syntactic statement - never reached
 }
 
-short find_even_parity(char *rev_merged_msg, int msg_size, int rbit_num, short exclude_rbit){
+short find_even_parity(char *rev_merged_msg, int msg_size, int rbit_num, short exclude_rbit, short verbose){
 	// Find's the even parity for posns relevant to rbit_num
 	// msg_size is the entire size of merged message
 	// assessed_bits returns the set of bits that were examined
@@ -102,6 +103,9 @@ short find_even_parity(char *rev_merged_msg, int msg_size, int rbit_num, short e
 		if(decimal_to_binary(i+1)[rbit_num]=='1'){
 			if(*(rev_merged_msg+i)=='1'){
 				count_ones++;
+			}
+			if(verbose){
+				printf(" %d,", (i+1));
 			}
 		}
 	}
@@ -144,21 +148,37 @@ char* remove_redundant_bits(char* rev_merged_msg, int msg_size, int r_val, short
 }
 
 
-char* encode_hamming_message(char* raw_msg, int *r_value, int *enc_msg_size){
+char* encode_hamming_message(char* raw_msg, int *enc_msg_size, short verbose){
 	// r_value is used to return the r_value
 	// msg_size is the size of raw message
 	int msg_size = strlen(raw_msg);
 	int r_val = find_r_value_from_rawmsg(msg_size);
+	if(verbose){
+		printf("         Size of original message (m) : %d", msg_size);
+		printf("\nMin. r computed using `2^r >= (m+r+1)`: %d", r_val);
+	}
 	// Reverse the raw message for convenience
 	char *rev_raw_msg = reverse_string(raw_msg);
 	// Insert the redundant bit
 	char *rev_merged_msg = position_redundant_bits(rev_raw_msg, msg_size, r_val);
 	// Set parity values to the redundant bits
+	char *redundant_bits = (char*)malloc(sizeof(char)*r_val);
+	int parity_val;
 	for(int r=0;r<r_val;r++){
-		*(rev_merged_msg+(raise_to_power(2, r)-1)) = 48 + find_even_parity(rev_merged_msg, msg_size+r_val, r, 1);
+		if(verbose){
+			printf("\n\nFinding Parity Bit at R%d\nComputed at positions: ", (r+1));
+		}
+		parity_val = find_even_parity(rev_merged_msg, msg_size+r_val, r, 1, 1);
+		*(rev_merged_msg+(raise_to_power(2, r)-1)) = 48 + parity_val;
+		*(redundant_bits+r_val-r-1) = 48 + parity_val;
+		if(verbose){
+			printf("\nParity Bit Value: %d", parity_val);
+		}
 	}
-	// Return the r_value and full message size
-	*r_value = r_val;
+	if(verbose){
+		printf("\n\n Redundant bits: %s", redundant_bits);
+	}
+	// Return the full message size
 	*enc_msg_size = (r_val + msg_size); 
 	// Reverse-back the merged string
 	return reverse_string(rev_merged_msg);
@@ -169,8 +189,8 @@ char* decode_hamming_message(char *merged_msg, short verbose){
 	int msg_size = strlen(merged_msg);
 	int r_val = find_r_value_from_hammingmsg(msg_size);
 	if(verbose){
-		printf("\n       Size of encoded message (m+r) : %d", msg_size);
-		printf("\nMin. r coputed using `2^r >= (m+r+1)`: %d", r_val);
+		printf("        Size of encoded message (m+r) : %d", msg_size);
+		printf("\nMin. r computed using `2^r >= (m+r+1)`: %d", r_val);
 	}
 	// Reverse the hamming message
 	char *rev_merged_msg = reverse_string(merged_msg);
@@ -178,10 +198,13 @@ char* decode_hamming_message(char *merged_msg, short verbose){
 	char *error_posn_binary = (char*)malloc(sizeof(char)*r_val);
 	int parity_val;
 	for(int r=0;r<r_val;r++){
-		parity_val = find_even_parity(rev_merged_msg, msg_size, r, 0);
+		if(verbose){
+			printf("\n\nFinding Parity Bit at R%d\nComputed at positions: ", (r+1));
+		}
+		parity_val = find_even_parity(rev_merged_msg, msg_size, r, 0, 1);
 		*(error_posn_binary+r_val-r-1) = 48 + parity_val;
 		if(verbose){
-			printf("\nParity Bit at R%d : %d", (r+1), parity_val);
+			printf("\nParity Bit Value: %d", parity_val);
 		}
 	}
 	int correction_posn = binary_to_decimal(error_posn_binary);
@@ -194,7 +217,7 @@ char* decode_hamming_message(char *merged_msg, short verbose){
 		}
 	}
 	if(verbose){
-		printf(" Binary form of correction posn: %s", error_posn_binary);
+		printf("\n\n Binary form of correction posn: %s", error_posn_binary);
 		printf("\nDecimal form of correction posn: %d", correction_posn);
 		printf("\nCorrected hamming-encoded message: %s", reverse_string(rev_merged_msg));
 	}

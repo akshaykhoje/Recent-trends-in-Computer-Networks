@@ -30,12 +30,13 @@ void main(){
 	char *msg_buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
 	int msg_size = 0;
 	do {
+		printf("\n\n--------------------------------------------------\n");
 		msg_size = read(self_socket, msg_buffer, MSG_BUFFER_SIZE);
 		if (msg_size==0){
 			printf("\nServer exited...\n");
 			break;
 		}
-		printf("\n\nData received: %s\n", msg_buffer);
+		printf("\nData received: %s\n", msg_buffer);
 		msg_buffer = decode_hamming_message(msg_buffer, 1);
 		printf("\nCorrected data: %s", msg_buffer);
 		fflush(stdout);
