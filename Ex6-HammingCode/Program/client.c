@@ -28,7 +28,6 @@ void main(){
 	}
 
 	char *msg_buffer = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
-	char *redundant_bits = (char*)malloc(sizeof(char)*MSG_BUFFER_SIZE);
 	int msg_size = 0;
 	do {
 		msg_size = read(self_socket, msg_buffer, MSG_BUFFER_SIZE);
@@ -37,8 +36,7 @@ void main(){
 			break;
 		}
 		printf("\n\nData received: %s\n", msg_buffer);
-		msg_buffer = decode_hamming_message(msg_buffer, redundant_bits);
-		printf("Redundant bits computed: %s", redundant_bits);
+		msg_buffer = decode_hamming_message(msg_buffer, 1);
 		printf("\nCorrected data: %s", msg_buffer);
 		fflush(stdout);
 	}while(1==1);

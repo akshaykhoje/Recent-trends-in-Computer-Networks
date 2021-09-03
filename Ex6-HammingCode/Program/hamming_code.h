@@ -26,15 +26,12 @@ char* pass_noise(char *encoded_msg, int msg_size){
 }
 
 char* reverse_string(char *orig_string){
-	char *p1, *p2;
-	if (!orig_string || ! *orig_string)
-		return orig_string;
-	for (p1 = orig_string, p2 = orig_string + strlen(orig_string) - 1; p2 > p1; ++p1, --p2){
-		*p1 ^= *p2;
-		*p2 ^= *p1;
-		*p1 ^= *p2;
+	int size = strlen(orig_string);
+	char *rev_string = (char*)malloc(sizeof(char)*size);
+	for(int i=0;i<size;i++){
+		*(rev_string+i) = *(orig_string+size-i-1);
 	}
-	return orig_string;
+	return rev_string;
 }
 
 int raise_to_power(int base, int exp){
@@ -60,6 +57,7 @@ char* decimal_to_binary(int num){
 }
 
 int binary_to_decimal(char *binary){
+	binary = reverse_string(binary);
 	int decimal_num = 0;
 	int posn = 0;
 	char *parser = binary;
@@ -128,7 +126,7 @@ char* position_redundant_bits(char* rev_raw_msg, int msg_size, int r_val){
 	return rev_merged_msg;
 }
 
-char* remove_redundant_bits(char* rev_merged_msg, int msg_size, int r_val){
+char* remove_redundant_bits(char* rev_merged_msg, int msg_size, int r_val, short verbose){
 	// merged_msg is given in reverse
 	char *rev_raw_msg = (char*)malloc(sizeof(char)*(msg_size-r_val));
 	// curr_r is the r in 2^r=posn (posn in reversed msg)
@@ -166,16 +164,25 @@ char* encode_hamming_message(char* raw_msg, int *r_value, int *enc_msg_size){
 	return reverse_string(rev_merged_msg);
 }
 
-char* decode_hamming_message(char *merged_msg, char *redundant_bits){
+char* decode_hamming_message(char *merged_msg, short verbose){
 	// msg_size is the size of merged message
 	int msg_size = strlen(merged_msg);
 	int r_val = find_r_value_from_hammingmsg(msg_size);
+	if(verbose){
+		printf("\n       Size of encoded message (m+r) : %d", msg_size);
+		printf("\nMin. r coputed using `2^r >= (m+r+1)`: %d", r_val);
+	}
 	// Reverse the hamming message
 	char *rev_merged_msg = reverse_string(merged_msg);
 	// Compute parities
 	char *error_posn_binary = (char*)malloc(sizeof(char)*r_val);
+	int parity_val;
 	for(int r=0;r<r_val;r++){
-		*(error_posn_binary+r_val-r-1) = 48 + find_even_parity(rev_merged_msg, msg_size, r, 0);
+		parity_val = find_even_parity(rev_merged_msg, msg_size, r, 0);
+		*(error_posn_binary+r_val-r-1) = 48 + parity_val;
+		if(verbose){
+			printf("\nParity Bit at R%d : %d", (r+1), parity_val);
+		}
 	}
 	int correction_posn = binary_to_decimal(error_posn_binary);
 	if(correction_posn!=0){
@@ -186,9 +193,13 @@ char* decode_hamming_message(char *merged_msg, char *redundant_bits){
 			*(rev_merged_msg+correction_posn-1) = '0';
 		}
 	}
+	if(verbose){
+		printf(" Binary form of correction posn: %s", error_posn_binary);
+		printf("\nDecimal form of correction posn: %d", correction_posn);
+		printf("\nCorrected hamming-encoded message: %s", reverse_string(rev_merged_msg));
+	}
 	// Return the redundant bits
-	memcpy(redundant_bits, error_posn_binary, r_val);
-	return reverse_string(remove_redundant_bits(rev_merged_msg, msg_size, r_val));
+	return reverse_string(remove_redundant_bits(rev_merged_msg, msg_size, r_val, verbose));
 }
 
 #endif
