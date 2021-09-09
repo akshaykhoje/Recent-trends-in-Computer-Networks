@@ -47,9 +47,8 @@ int main(int argc, char **argv) {
     int data_size;
     int response;
 
-	// www.ssn.edu.in/wp-content/uploads/2021/02/NIRF-2021-SSNCE-ENGG.pdf
-	// www.w3.org/WAI/ER/tests/xhtml/testfiles/restores/pdf/dummy.pdf
-	// www.africau.edu/images/default/sample.pdf
+	// Working Case: www.w3.org/WAI/ER/tests/xhtml/testfiles/restores/pdf/dummy.pdf
+	// Working Case: www.africau.edu/images/default/sample.pdf
     
     int client_socket = make_socket(socket_details);
     printf("\nConnecting to server...\n");
