@@ -5,15 +5,7 @@
 #include<errno.h>
 
 #define SERVER_PORT 8080
-#define BACKLOG_LIMIT 5
-#define LOCALHOST_IP "127.0.0.1"
-#define ADDRESS_FAMILY AF_INET
-#define ADDRESS_BUFFER_SIZE 30
-#define MSG_BUFFER_SIZE 100
-#define IP_STRING_LEN 24	
-#define TERMINATION_INIT_STRING "ENDSESSION"
-#define TERMINATION_ACK_STRING "ENDSESSION_ACK"
-#define MSG_DELIMITER ';'
+#define ADDRESS_FAMILY AF_INET	
 
 /*	
 Use BLOCKING sockets (default configuration)
