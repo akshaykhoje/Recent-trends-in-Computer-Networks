@@ -8,6 +8,33 @@
 
 #define HTTP_HEADERLINE_SIZE 50
 
+
+// Read a file line-by-line
+int read_line(int fd, char** buffer){
+    char reader[1];
+    int line_size = 0;
+    char *line_buf = (char*)malloc(sizeof(char)*DEFAULT_BUFFER_SIZE);
+    char *temp = NULL;
+
+    int bytes_read = read(fd, reader, 1);
+    while(bytes_read!=0 && *(reader)!=10){
+        // Until EOF or newline
+        *(line_buf+line_size) = *(reader);
+        bytes_read = read(fd, reader, 1);
+        line_size++;
+        temp = (char*)expand_arr_if_full(line_buf, line_size, sizeof(char));
+        if(temp==NULL){
+            return -100;            // Unexpected Error Occurred
+        }
+        else{
+            line_buf = temp;
+        }
+    }
+
+    *(buffer) = line_buf;
+    return line_size;
+}
+
 char* get_hostname(char *web_address){
 	char *hostname = (char*)malloc(sizeof(char)*BUFFER_SIZE);
 	char *remain = (char*)malloc(sizeof(char)*BUFFER_SIZE);
@@ -28,15 +55,22 @@ char* prepare_get_header(char* hostname, char* resource_path){
 	return header;
 }
 
-char* check_response_status(char *response){
-	printf("%s", response);
+char* check_response_status(char *response_file){
+	int read_fd = open(response_file, O_RDONLY);
+	char *line = (char*)malloc(sizeof(char)*BUFFER_SIZE);
+	int line_size;
+	line_size = read_line(read_fd, line);
+	while(line_size!=0){
+		
+		line_size = read_line(read_fd, line);
+	}
 	char *status_code = (char*)malloc(sizeof(char)*HTTP_HEADERLINE_SIZE);
-	char *version = (char*)malloc(sizeof(char)*HTTP_HEADERLINE_SIZE);
+	float version;
 	char *temp_1 = (char*)malloc(sizeof(char)*HTTP_HEADERLINE_SIZE);
 	char *temp_2 = (char*)malloc(sizeof(char)*HTTP_HEADERLINE_SIZE);
-	
-	sscanf(response, "HTTP/%[^ ]%[^ ]%s", version, status_code, temp_1);
-	printf("->V%sS%s", version, status_code);
+	printf("%s\n", response);
+	sscanf(response, "%HTTP/%f %[^ ]%s", version, status_code, temp_1);
+	printf("->V%fS%s", version, status_code);
 	return response;
 }
 

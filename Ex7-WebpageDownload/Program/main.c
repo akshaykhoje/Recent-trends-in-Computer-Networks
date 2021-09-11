@@ -65,19 +65,25 @@ int main(int argc, char **argv) {
     printf("\nRequest Header\n%s", header);
 	
 	// Get response
-	char *store_as = (char*)malloc(sizeof(char)*BUFFER_SIZE);
-	printf("\nName your download: ");
-	scanf(" %s", store_as);
-	sprintf(store_as, "%s.pdf", store_as);
-	int store_fd = open(store_as, O_WRONLY | O_CREAT, get_default_fileperm());
+	// Store the response into a temporary file to parser for status
+	char *temp_filename = "temp";
+	int store_fd = open(temp_filename, O_WRONLY | O_CREAT, get_default_fileperm());
 	if(store_fd == -1){
 		return -4;          // File not Readable
 	}     
 	do{
-		data_size = recv(client_socket, data_buffer, sizeof(data_buffer), 0);	
-		check_response_status(data_buffer, data_size);
+		data_size = recv(client_socket, data_buffer, sizeof(data_buffer), 0);
 		data_size = write(store_fd, data_buffer, data_size);
 	}while(data_size!=0);
+	close(store_fd);
+
+	check_response_status(temp_filename);
+
+	/*
+	char *store_as = (char*)malloc(sizeof(char)*BUFFER_SIZE);
+	printf("\nName your download: ");
+	scanf(" %s", store_as);
+	sprintf(store_as, "%s.pdf", store_as);
 	
 	// Close file and sockets
 	if(!close(store_fd)){
@@ -86,6 +92,7 @@ int main(int argc, char **argv) {
 	else{
 		printf("\nError when closing\n");     // Unexpected Error Occurred
 	}	
+	*/
 	destroy_socket(client_socket);
     return 0;
 }
