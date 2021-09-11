@@ -74,7 +74,8 @@ int main(int argc, char **argv) {
 		return -4;          // File not Readable
 	}     
 	do{
-		data_size = recv(client_socket, data_buffer, sizeof(data_size), 0);	
+		data_size = recv(client_socket, data_buffer, sizeof(data_buffer), 0);	
+		check_response_status(data_buffer, data_size);
 		data_size = write(store_fd, data_buffer, data_size);
 	}while(data_size!=0);
 	
