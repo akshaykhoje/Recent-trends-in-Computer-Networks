@@ -6,30 +6,22 @@
 
 #include "tcp_socket.h"
 
-#define HTTP_HEADERLINE_SIZE 50
+#define HTTP_HEADERLINE_SIZE 500
 
 
 // Read a file line-by-line
 int read_line(int fd, char** buffer){
-    char reader[1];
+    char reader[2];
     int line_size = 0;
     char *line_buf = (char*)malloc(sizeof(char)*HTTP_HEADERLINE_SIZE);
-    char *temp = NULL;
-	// Read character-wise entire line
+
     int bytes_read = read(fd, reader, 1);
     while(bytes_read!=0 && *(reader)!=10){
         // Until EOF or newline
         *(line_buf+line_size) = *(reader);
         bytes_read = read(fd, reader, 1);
         line_size++;
-        if(temp==NULL){
-            return -100;            // Unexpected Error Occurred
-        }
-        else{
-            line_buf = temp;
-        }
     }
-	// Return the read-line
     *(buffer) = line_buf;
     return line_size;
 }
@@ -58,25 +50,25 @@ char* check_response_status(char *response_file){
 	// File readers
 	int read_fd = open(response_file, O_RDONLY);
 	char *line = (char*)malloc(sizeof(char)*HTTP_HEADERLINE_SIZE);
-	int line_size;
 	// Parameter readers
 	int status_code = -1;
 	float version = -1;
-	line_size = read_line(read_fd, &line);
-	while(line_size!=0){
-		printf("HERE: %s", line);
+	char *type = (char*)malloc(sizeof(char)*HTTP_HEADERLINE_SIZE);
+	char *subtype = (char*)malloc(sizeof(char)*HTTP_HEADERLINE_SIZE);
+	type = NULL;
+	subtype = NULL;
+	while(read_line(read_fd, &line)!=0){
 		fflush(stdout);
 		if(version==-1){
-			sscanf(line, "HTTP/%f %d", version, status_code);
-			printf("\n%f\n%d", version, status_code);
+			sscanf(line, "HTTP/%f %d", &version, &status_code);
 		}
-		line_size = read_line(read_fd, &line);
+		else if(type==NULL){
+			printf("\n%s", line);
+			sscanf(line, "Content-Type: %[^/]/%s", type, subtype);
+		}
 	}
-	
-	char *temp_1 = (char*)malloc(sizeof(char)*HTTP_HEADERLINE_SIZE);
-	char *temp_2 = (char*)malloc(sizeof(char)*HTTP_HEADERLINE_SIZE);
-	//sscanf(response, "%HTTP/%f %[^ ]%s", version, status_code, temp_1);
-	printf("->V%fS%s", version, status_code);
+	close(read_fd);
+	printf("\n%p\n%p", type, subtype);
 	return NULL;
 }
 
