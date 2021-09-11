@@ -13,16 +13,15 @@
 int read_line(int fd, char** buffer){
     char reader[1];
     int line_size = 0;
-    char *line_buf = (char*)malloc(sizeof(char)*DEFAULT_BUFFER_SIZE);
+    char *line_buf = (char*)malloc(sizeof(char)*HTTP_HEADERLINE_SIZE);
     char *temp = NULL;
-
+	// Read character-wise entire line
     int bytes_read = read(fd, reader, 1);
     while(bytes_read!=0 && *(reader)!=10){
         // Until EOF or newline
         *(line_buf+line_size) = *(reader);
         bytes_read = read(fd, reader, 1);
         line_size++;
-        temp = (char*)expand_arr_if_full(line_buf, line_size, sizeof(char));
         if(temp==NULL){
             return -100;            // Unexpected Error Occurred
         }
@@ -30,7 +29,7 @@ int read_line(int fd, char** buffer){
             line_buf = temp;
         }
     }
-
+	// Return the read-line
     *(buffer) = line_buf;
     return line_size;
 }
@@ -56,22 +55,29 @@ char* prepare_get_header(char* hostname, char* resource_path){
 }
 
 char* check_response_status(char *response_file){
+	// File readers
 	int read_fd = open(response_file, O_RDONLY);
-	char *line = (char*)malloc(sizeof(char)*BUFFER_SIZE);
+	char *line = (char*)malloc(sizeof(char)*HTTP_HEADERLINE_SIZE);
 	int line_size;
-	line_size = read_line(read_fd, line);
+	// Parameter readers
+	int status_code = -1;
+	float version = -1;
+	line_size = read_line(read_fd, &line);
 	while(line_size!=0){
-		
-		line_size = read_line(read_fd, line);
+		printf("HERE: %s", line);
+		fflush(stdout);
+		if(version==-1){
+			sscanf(line, "HTTP/%f %d", version, status_code);
+			printf("\n%f\n%d", version, status_code);
+		}
+		line_size = read_line(read_fd, &line);
 	}
-	char *status_code = (char*)malloc(sizeof(char)*HTTP_HEADERLINE_SIZE);
-	float version;
+	
 	char *temp_1 = (char*)malloc(sizeof(char)*HTTP_HEADERLINE_SIZE);
 	char *temp_2 = (char*)malloc(sizeof(char)*HTTP_HEADERLINE_SIZE);
-	printf("%s\n", response);
-	sscanf(response, "%HTTP/%f %[^ ]%s", version, status_code, temp_1);
+	//sscanf(response, "%HTTP/%f %[^ ]%s", version, status_code, temp_1);
 	printf("->V%fS%s", version, status_code);
-	return response;
+	return NULL;
 }
 
 /*
