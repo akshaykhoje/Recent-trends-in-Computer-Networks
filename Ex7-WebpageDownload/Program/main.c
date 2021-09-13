@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
     memset(&socket_filter, 0, sizeof(socket_details));
     socket_filter.ai_family = AF_UNSPEC;
     socket_filter.ai_socktype = SOCK_STREAM;
-    getaddrinfo("www.africau.edu","80", &socket_filter, &socket_details);
+    getaddrinfo("www.africau.edu", HTTP_PORT_STRING, &socket_filter, &socket_details);
     
     char *data_buffer = (char*)malloc(sizeof(char)*BUFFER_SIZE);
     int data_size;

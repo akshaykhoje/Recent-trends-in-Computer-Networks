@@ -7,6 +7,7 @@
 #include "tcp_socket.h"
 
 #define HTTP_HEADERLINE_SIZE 500
+#define HTTP_PORT_STRING "80"
 
 
 // Read a file line-by-line
@@ -63,12 +64,11 @@ char* check_response_status(char *response_file){
 			sscanf(line, "HTTP/%f %d", &version, &status_code);
 		}
 		else if(type==NULL){
-			printf("\n%s", line);
-			sscanf(line, "Content-Type: %[^/]/%s", type, subtype);
+			sscanf(line, "Content%[^\n]s", type);
 		}
 	}
 	close(read_fd);
-	printf("\n%p\n%p", type, subtype);
+
 	return NULL;
 }
 
