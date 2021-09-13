@@ -49,12 +49,12 @@ char* get_resource_path(char *web_address){
 }
 
 char* prepare_get_header(char* hostname, char* resource_path){
-	char *header = (char*)malloc(sizeof(char)*BUFFER_SIZE);
+	char *header = (char*)malloc(sizeof(char)*BUFFER_SIZE*2);
 	sprintf(header, "GET %s HTTP/1.1\r\nHost: %s\r\nConnection: close\r\n\r\n", resource_path, hostname);
 	return header;
 }
 
-short check_response_status(char *response_file, char **response_head){
+short check_response_status(char *response_file, short disp_header){
 	// Currently ensures successful PDF response
 	// File readers
 	int read_fd = open(response_file, O_RDONLY);
@@ -64,7 +64,6 @@ short check_response_status(char *response_file, char **response_head){
 	float version = -1;
 	short type_read = 0;
 	short body_start = 0;
-	int response_head_idx = 0;
 	char *type = (char*)malloc(sizeof(char)*HTTP_HEADERLINE_SIZE);
 	//type = NULL;
 	int line_size = read_line(read_fd, &line);
@@ -77,13 +76,13 @@ short check_response_status(char *response_file, char **response_head){
 			sscanf(line, "Content-Type: %s", type);
 			type_read = 1;
 		}
-		else if(!body_start){
+		else if(disp_header && !body_start){
 			// Store the response head
 			if(startswith(PDF_START_SYMBOL, line)){
 				body_start = 1;
 			}
 			else{
-				memcpy(*response_head, line, line_size);
+				printf("\n%s", line);
 			}
 		}
 		line_size = read_line(read_fd, &line);

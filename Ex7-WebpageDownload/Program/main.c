@@ -77,9 +77,10 @@ int main(int argc, char **argv) {
 	}while(data_size!=0);
 	close(store_fd);
 
-	check_response_status(temp_filename, &header);
-	printf("\n%s", header);
-	
+	printf("\nResponse Header");
+	printf("\n-----------------------------");
+	check_response_status(temp_filename, 1);
+
 	char *store_as = (char*)malloc(sizeof(char)*BUFFER_SIZE);
 	printf("\nName your download: ");
 	scanf(" %s", store_as);

@@ -1,5 +1,5 @@
 HTTP/1.1 200 OK
-Date: Mon, 13 Sep 2021 10:32:26 GMT
+Date: Mon, 13 Sep 2021 11:18:00 GMT
 Content-Type: application/pdf
 Content-Length: 3028
 Connection: close
@@ -10,12 +10,12 @@ Cache-Control: max-age=31536000
 Host-Header: 8441280b0c35cbc1147f8ba998a563a7
 X-Proxy-Cache-Info: DT:1
 CF-Cache-Status: HIT
-Age: 12309623
+Age: 12312357
 Accept-Ranges: bytes
-Report-To: {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=hP0xnffME%2BiiZaUVaX5BdEPrx2dJWy2LbnZMTtJuFAJB3FU%2F9UOolwszWOR9troJh2yjT0T6p68WZVAj0%2B4zizJkGqS9oJewp%2BfkRS0IZCEtOQ%2F%2BSffqNsqgmx0b0YiBNfk%3D"}],"group":"cf-nel","max_age":604800}
+Report-To: {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=9Xxede0oq5JUi9wArP0f5AZ0blXXoBnbAl856%2BUYGIGRtOC3jTcRpfuKqCppqHVGRcgbnSl1GYQdrQbF9xKOw9TpHMkJHbIP4AvNGOJl7VMdmbMNYJGqK%2BqqpMCOe8ITBs0%3D"}],"group":"cf-nel","max_age":604800}
 NEL: {"success_fraction":0,"report_to":"cf-nel","max_age":604800}
 Server: cloudflare
-CF-RAY: 68e0b62bde1bde0d-BOM
+CF-RAY: 68e0f8eaded3de4a-BOM
 alt-svc: h3=":443"; ma=86400, h3-29=":443"; ma=86400, h3-28=":443"; ma=86400, h3-27=":443"; ma=86400
 
 %PDF-1.3
