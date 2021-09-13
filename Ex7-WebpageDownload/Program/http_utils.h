@@ -8,6 +8,9 @@
 
 #define HTTP_HEADERLINE_SIZE 500
 #define HTTP_PORT_STRING "80"
+#define CONTENT_TYPE_ATTR_NAME "Content-Type"
+#define CONTENT_PDF_VALUE "application/pdf"
+#define PDF_START_SYMBOL "%PDF"
 
 
 // Read a file line-by-line
@@ -25,6 +28,10 @@ int read_line(int fd, char** buffer){
     }
     *(buffer) = line_buf;
     return line_size;
+}
+
+short startswith(char *prefix, char *string){
+    return strncmp(prefix, string, strlen(prefix)) == 0;
 }
 
 char* get_hostname(char *web_address){
@@ -47,29 +54,47 @@ char* prepare_get_header(char* hostname, char* resource_path){
 	return header;
 }
 
-char* check_response_status(char *response_file){
+short check_response_status(char *response_file, char **response_head){
+	// Currently ensures successful PDF response
 	// File readers
 	int read_fd = open(response_file, O_RDONLY);
 	char *line = (char*)malloc(sizeof(char)*HTTP_HEADERLINE_SIZE);
 	// Parameter readers
 	int status_code = -1;
 	float version = -1;
+	short type_read = 0;
+	short body_start = 0;
+	int response_head_idx = 0;
 	char *type = (char*)malloc(sizeof(char)*HTTP_HEADERLINE_SIZE);
-	char *subtype = (char*)malloc(sizeof(char)*HTTP_HEADERLINE_SIZE);
-	type = NULL;
-	subtype = NULL;
-	while(read_line(read_fd, &line)!=0){
+	//type = NULL;
+	int line_size = read_line(read_fd, &line);
+	while(line_size!=0){
 		fflush(stdout);
 		if(version==-1){
 			sscanf(line, "HTTP/%f %d", &version, &status_code);
 		}
-		else if(type==NULL){
-			sscanf(line, "Content%[^\n]s", type);
+		else if(!type_read && startswith(CONTENT_TYPE_ATTR_NAME, line)){
+			sscanf(line, "Content-Type: %s", type);
+			type_read = 1;
 		}
+		else if(!body_start){
+			// Store the response head
+			if(startswith(PDF_START_SYMBOL, line)){
+				body_start = 1;
+			}
+			else{
+				memcpy(*response_head, line, line_size);
+			}
+		}
+		line_size = read_line(read_fd, &line);
 	}
 	close(read_fd);
-
-	return NULL;
+	// Return validation result
+	if(status_code==200 && strcmp(CONTENT_PDF_VALUE, type)==0){
+		// Verified. PDF
+		return 1;
+	}
+	return 0;
 }
 
 /*

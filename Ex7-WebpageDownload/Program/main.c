@@ -77,22 +77,18 @@ int main(int argc, char **argv) {
 	}while(data_size!=0);
 	close(store_fd);
 
-	check_response_status(temp_filename);
-
-	/*
+	check_response_status(temp_filename, &header);
+	printf("\n%s", header);
+	
 	char *store_as = (char*)malloc(sizeof(char)*BUFFER_SIZE);
 	printf("\nName your download: ");
 	scanf(" %s", store_as);
 	sprintf(store_as, "%s.pdf", store_as);
 	
+	// Rename the temporary save as the required file
+	rename(temp_filename, store_as);
+	printf("File downloaded as '%s'\n", store_as);
 	// Close file and sockets
-	if(!close(store_fd)){
-		printf("\nPDF downloaded as '%s'\n", store_as);
-	}
-	else{
-		printf("\nError when closing\n");     // Unexpected Error Occurred
-	}	
-	*/
 	destroy_socket(client_socket);
     return 0;
 }
