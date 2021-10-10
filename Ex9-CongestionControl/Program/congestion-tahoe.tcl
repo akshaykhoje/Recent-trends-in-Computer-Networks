@@ -52,6 +52,11 @@ $tcp_1 set window_ 6000
 #default packet-size is 1000
 $tcp_1 set packetSize_ 1200  
 
+#Setup a FTP over TCP connection
+set ftp_1 [new Application/FTP]
+$ftp_1 attach-agent $tcp_1
+$ftp_1 set type_ FTP
+
 #Setup a TCP-Tahoe connection
 set tcp_2 [new Agent/TCP]
 $tcp_2 set class_ 2
@@ -70,11 +75,16 @@ $tcp_2 set fid_ 2
 $tcp_2 set window_ 6000
 $tcp_2 set packetSize_ 900
 
+#Setup a FTP over TCP connection
+set ftp_2 [new Application/FTP]
+$ftp_2 attach-agent $tcp_2
+$ftp_2 set type_ FTP
+
 #Schedule events for the two TCP agents
-$ns at 0.5 "$tcp_1 start"
-$ns at 1.0 "$tcp_2 start"
-$ns at 3.0 "$tcp_2 stop"
-$ns at 3.5 "$tcp_1 stop"
+$ns at 0.5 "$ftp_1 start"
+$ns at 1.0 "$ftp_2 start"
+$ns at 3.0 "$ftp_2 stop"
+$ns at 3.5 "$ftp_1 stop"
 
 #Call the finish procedure after 4 seconds of simulation time
 $ns at 4.0 "finish"
