@@ -34,38 +34,50 @@ $ns duplex-link-op $n0 $n1 orient right-up
 $ns duplex-link-op $n1 $n2 orient right-down 
 
 #Setup a TCP-Tahoe connection
-# Using Agent/TCP creates a Tahoe connection
-set tcp_1 [new Agent/TCP -a]
+#Using Agent/TCP creates a Tahoe connection
+set tcp_1 [new Agent/TCP]
 $tcp_1 set class_ 2
-# Set the source node
+#Set the source node
 $ns attach-agent $n0 $tcp_1
 
-# Create the sink for the connection
+#Create the sink for the connection
 set sink_1 [new Agent/TCPSink]
 $ns attach-agent $n1 $sink_1
-# Establish the connection
+#Establish the connection
 $ns connect $tcp_1 $sink_1
 
-# Set other properties
+#Set other properties
 $tcp_1 set fid_ 1
 $tcp_1 set window_ 6000
-# default packet-size is 1000
+#default packet-size is 1000
 $tcp_1 set packetSize_ 1200  
 
 #Setup a TCP-Tahoe connection
-set tcp_2 [new Agent/TCP -a]
+set tcp_2 [new Agent/TCP]
 $tcp_2 set class_ 2
 #Set the source node
 $ns attach-agent $n0 $tcp_2
 
-# Create the sink for the connection
+#Create the sink for the connection
 set sink_2 [new Agent/TCPSink]
-# Set the sink node
+#Set the sink node
 $ns attach-agent $n1 $sink_2
-# Establish the connection
+#Establish the connection
 $ns connect $tcp_2 $sink_2
 
-# Set other properties
+#Set other properties
 $tcp_2 set fid_ 2
 $tcp_2 set window_ 6000
 $tcp_2 set packetSize_ 900
+
+#Schedule events for the two TCP agents
+$ns at 0.5 "$tcp_1 start"
+$ns at 1.0 "$tcp_2 start"
+$ns at 3.0 "$tcp_2 stop"
+$ns at 3.5 "$tcp_1 stop"
+
+#Call the finish procedure after 4 seconds of simulation time
+$ns at 4.0 "finish"
+
+#Run the simulation
+$ns run
