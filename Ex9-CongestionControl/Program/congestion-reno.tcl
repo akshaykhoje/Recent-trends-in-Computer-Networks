@@ -39,7 +39,7 @@ $ns duplex-link-op $n1 $n2 orient right-down
 #Monitor the queue for link (n2-n3). (for NAM)
 $ns duplex-link-op $n1 $n2 queuePos 0.5
 
-#Setup a TCP-Reno connection
+#Setup a TCP-Tahoe connection
 #Using Agent/TCP creates a Tahoe connection
 set tcp_1 [new Agent/TCP/Reno]
 $tcp_1 set class_ 2
