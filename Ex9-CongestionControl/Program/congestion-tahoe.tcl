@@ -30,8 +30,8 @@ $ns duplex-link $n0 $n1 10Mb 10ms DropTail
 $ns duplex-link $n1 $n2 2Mb 10ms DropTail
 
 #Give node position (for NAM)
-$ns duplex-link-op $n0 $n1 orient right-up   # (+45deg)
-$ns duplex-link-op $n1 $n2 orient right-down # (-45deg)
+$ns duplex-link-op $n0 $n1 orient right-up   
+$ns duplex-link-op $n1 $n2 orient right-down 
 
 #Setup a TCP-Tahoe connection
 # Using Agent/TCP creates a Tahoe connection
