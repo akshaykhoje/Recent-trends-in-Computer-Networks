@@ -56,8 +56,11 @@ $ns duplex-link $n9 $n11 1Mb 10ms DropTail
 #Other links to complete the network
 
 # Set queue-limit on node-11
-$ns queue-limit $n10 $n11 10
-$ns queue-limit $n11 $n5 10
+$ns queue-limit $n10 $n11 50
+$ns queue-limit $n5 $n11 50
+# Set queue-limit on node-9
+$ns queue-limit $n0 $n9 50
+$ns queue-limit $n3 $n9 50
 
 #Give node position (for NAM)
 #Upper-Ring 
@@ -76,7 +79,12 @@ $ns duplex-link-op $n3 $n9 orient right-up
 $ns duplex-link-op $n9 $n0 orient left-up
 $ns duplex-link-op $n9 $n11 orient right
 
-#Monitor the queue for link (n2-n3). (for NAM)
+#Monitor the queue for link (n11). (for NAM)
+$ns duplex-link-op $n10 $n11 queuePos 0.5
+$ns duplex-link-op $n5 $n11 queuePos 0.5
+#Monitor the queue for link (n9). (for NAM)
+$ns duplex-link-op $n9 $n3 queuePos -0.5
+$ns duplex-link-op $n9 $n0 queuePos -0.5
 
 #Setup a UDP connection
 set udp_1 [new Agent/UDP]
@@ -94,7 +102,7 @@ $udp_1 set fid_ 1
 set cbr_1 [new Application/Traffic/CBR]
 $cbr_1 attach-agent $udp_1
 $cbr_1 set type_ CBR
-$cbr_1 set packet_size_ 1000
+$cbr_1 set packet_size_ 1500
 $cbr_1 set rate_ 1mb
 $cbr_1 set random_ false
 
@@ -114,7 +122,7 @@ $udp_2 set fid_ 2
 set cbr_2 [new Application/Traffic/CBR]
 $cbr_2 attach-agent $udp_2
 $cbr_2 set type_ CBR
-$cbr_2 set packet_size_ 1000
+$cbr_2 set packet_size_ 1500
 $cbr_2 set rate_ 1mb
 $cbr_2 set random_ false
 
