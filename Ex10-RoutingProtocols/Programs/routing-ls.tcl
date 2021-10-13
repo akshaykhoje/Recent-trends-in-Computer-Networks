@@ -102,8 +102,8 @@ $udp_1 set fid_ 1
 set cbr_1 [new Application/Traffic/CBR]
 $cbr_1 attach-agent $udp_1
 $cbr_1 set type_ CBR
-$cbr_1 set packet_size_ 1500
-$cbr_1 set rate_ 1mb
+$cbr_1 set packet_size_ 1000
+$cbr_1 set rate_ 0.5mb
 $cbr_1 set random_ false
 
 #Setup a UDP connection
@@ -122,8 +122,8 @@ $udp_2 set fid_ 2
 set cbr_2 [new Application/Traffic/CBR]
 $cbr_2 attach-agent $udp_2
 $cbr_2 set type_ CBR
-$cbr_2 set packet_size_ 1500
-$cbr_2 set rate_ 1mb
+$cbr_2 set packet_size_ 1000
+$cbr_2 set rate_ 0.5mb
 $cbr_2 set random_ false
 
 #Schedule events for the UDP agents
