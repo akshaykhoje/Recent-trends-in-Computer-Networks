@@ -14,8 +14,4 @@ rt_size = 0;
 }
 
 END{
-printf(rt_pkts);
-printf("\n");
-printf(rt_size);
-printf("\n");
 }

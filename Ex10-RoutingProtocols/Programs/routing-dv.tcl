@@ -21,6 +21,8 @@ proc finish {} {
 	#Close the NAM trace file
 	close $nf
 	#Execute NAM on the trace file
+	exec awk -f extract_rtpkts.awk distvec_out.tr > dv_graph.tr &
+	exec xgraph dv_graph.tr &
 	exec nam distvec_out.nam &
 	exit 0
 }
