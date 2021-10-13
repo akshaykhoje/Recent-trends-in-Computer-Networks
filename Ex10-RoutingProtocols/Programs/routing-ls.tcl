@@ -41,17 +41,41 @@ set n11 [$ns node]
 
 #Create links between the nodes
 $ns duplex-link $n0 $n8 1Mb 10ms DropTail
+$ns duplex-link $n8 $n7 1Mb 10ms DropTail
+$ns duplex-link $n7 $n6 1Mb 10ms DropTail
+$ns duplex-link $n6 $n2 1Mb 10ms DropTail
+$ns duplex-link $n2 $n1 1Mb 10ms DropTail
 $ns duplex-link $n1 $n10 1Mb 10ms DropTail
-$ns duplex-link $n0 $n9 1Mb 10ms DropTail
-$ns duplex-link $n9 $n11 1Mb 10ms DropTail
 $ns duplex-link $n10 $n11 1Mb 10ms DropTail
 $ns duplex-link $n11 $n5 1Mb 10ms DropTail
-$ns duplex-link $n7 $n6 1Mb 10ms DropTail
-$ns duplex-link $n3 $n5 1Mb 10ms DropTail
+$ns duplex-link $n5 $n4 1Mb 10ms DropTail
 $ns duplex-link $n4 $n3 1Mb 10ms DropTail
-$ns duplex-link $n9 $n4 1Mb 10ms DropTail
+$ns duplex-link $n3 $n9 1Mb 10ms DropTail
+$ns duplex-link $n9 $n0 1Mb 10ms DropTail
+$ns duplex-link $n9 $n11 1Mb 10ms DropTail
+#Other links to complete the network
 
-#Give node position (for NAM)$ns duplex-link-op $n0 $n1 orient right-up
+# Set queue-limit on node-11
+$ns queue-limit $n10 $n11 10
+$ns queue-limit $n11 $n5 10
+
+#Give node position (for NAM)
+#Upper-Ring 
+$ns duplex-link-op $n0 $n8 orient right-up
+$ns duplex-link-op $n8 $n7 orient right
+$ns duplex-link-op $n7 $n6 orient right
+$ns duplex-link-op $n6 $n2 orient right
+$ns duplex-link-op $n2 $n1 orient right-down
+$ns duplex-link-op $n1 $n10 orient left-down
+$ns duplex-link-op $n10 $n11 orient left
+#Lower-Ring 
+$ns duplex-link-op $n11 $n5 orient down
+$ns duplex-link-op $n5 $n4 orient left
+$ns duplex-link-op $n4 $n3 orient left-up
+$ns duplex-link-op $n3 $n9 orient right-up
+$ns duplex-link-op $n9 $n0 orient left-up
+$ns duplex-link-op $n9 $n11 orient right
+
 #Monitor the queue for link (n2-n3). (for NAM)
 
 #Setup a UDP connection
