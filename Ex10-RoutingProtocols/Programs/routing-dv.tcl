@@ -20,9 +20,10 @@ proc finish {} {
 	$ns flush-trace
 	#Close the NAM trace file
 	close $nf
-	#Execute NAM on the trace file
+	# Extract graph points and plot them
 	exec awk -f extract_rtpkts.awk distvec_out.tr > dv_graph.tr &
 	exec xgraph dv_graph.tr &
+	#Execute NAM on the trace file
 	exec nam distvec_out.nam &
 	exit 0
 }

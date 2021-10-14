@@ -20,6 +20,9 @@ proc finish {} {
 	$ns flush-trace
 	#Close the NAM trace file
 	close $nf
+	# Extract graph points and plot them
+	exec awk -f extract_rtpkts.awk linkstate_out.tr > ls_graph.tr &
+	exec xgraph ls_graph.tr &
 	#Execute NAM on the trace file
 	exec nam linkstate_out.nam &
 	exit 0
