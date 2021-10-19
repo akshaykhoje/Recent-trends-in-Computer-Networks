@@ -62,7 +62,8 @@ $ns attach-agent $n4 $sink
 $ns connect $tcp $sink
 $tcp set fid_ 1
 
-#TODO: Window size, packet size 
+$tcp set window_ 1000
+$tcp set packetSize_ 400  
 
 #Setup a FTP over TCP connection
 set ftp [new Application/FTP]
@@ -83,15 +84,15 @@ $udp set fid_ 2
 set cbr [new Application/Traffic/CBR]
 $cbr attach-agent $udp
 $cbr set type_ CBR
-$cbr set packet_size_ 1000
-$cbr set rate_ 1mb
+$cbr set packet_size_ 400
+$cbr set rate_ 0.2mb
 $cbr set random_ false
 
 #Schedule events for the CBR and FTP agents
-$ns at 0.1 "$cbr start"
+$ns at 0.5 "$cbr start"
 $ns at 1.0 "$ftp start"
-$ns at 4.0 "$ftp stop"
-$ns at 4.5 "$cbr stop"
+$ns at 5.0 "$ftp stop"
+$ns at 5.0 "$cbr stop"
 
 #Call the finish procedure after 5 seconds of simulation time
 $ns at 5.0 "finish"
