@@ -19,6 +19,10 @@ proc finish {} {
 	$ns flush-trace
 	#Close the NAM trace file
 	close $nf
+	# Extract graph points and plot them
+	exec awk -f extract_seqno_tcp.awk tcp-udp.tr > tcp_graph.tr &
+	exec awk -f extract_seqno_udp.awk tcp-udp.tr > udp_graph.tr &
+	exec xgraph tcp_graph.tr udp_graph.tr &
 	#Execute NAM on the trace file
 	exec nam tcp-udp.nam &
 	exit 0
