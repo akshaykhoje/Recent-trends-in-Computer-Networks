@@ -45,10 +45,10 @@ $ns queue-limit $n2 $n3 10
 
 #Give node position (for NAM)
 $ns duplex-link-op $n0 $n2 orient right-down
-$ns duplex-link-op $n1 $n2 orient down 
-$ns simplex-link-op $n2 $n3 orient left-down
-$ns duplex-link-op $n3 $n4 orient right-up
-$ns duplex-link-op $n3 $n5 orient right-down
+$ns duplex-link-op $n1 $n2 orient right-up 
+$ns simplex-link-op $n2 $n3 orient right
+$ns duplex-link-op $n3 $n4 orient right-down
+$ns duplex-link-op $n3 $n5 orient right-up
 
 #Monitor the queue for link (n2-n3). (for NAM)
 $ns duplex-link-op $n2 $n3 queuePos 0.5
@@ -92,9 +92,6 @@ $ns at 0.1 "$cbr start"
 $ns at 1.0 "$ftp start"
 $ns at 4.0 "$ftp stop"
 $ns at 4.5 "$cbr stop"
-
-#Detach tcp and sink agents (not really necessary)
-$ns at 4.5 "$ns detach-agent $n0 $tcp ; $ns detach-agent $n3 $sink"
 
 #Call the finish procedure after 5 seconds of simulation time
 $ns at 5.0 "finish"
