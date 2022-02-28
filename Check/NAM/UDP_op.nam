@@ -1,0 +1,138 @@
+V -t * -v 1.0a5 -a 0
+A -t * -n 1 -p 0 -o 0x7fffffff -c 30 -a 1
+A -t * -h 1 -m 1073741823 -s 0
+c -t * -i 1 -n Red
+c -t * -i 2 -n Blue
+n -t * -a 0 -s 0 -S UP -v circle -c black -i black
+n -t * -a 1 -s 1 -S UP -v circle -c black -i black
+n -t * -a 2 -s 2 -S UP -v circle -c black -i black
+l -t * -s 0 -d 1 -S UP -r 1000000 -D 0.01 -c black -o right
+l -t * -s 1 -d 2 -S UP -r 2000000 -D 0.01 -c black -o down
++ -t 0.000169788487334637 -s 0 -d 1 -p rtProtoLS -e 100 -c 0 -i 0 -a 0 -x {0.2 1.1 -1 ------- null}
+- -t 0.000169788487334637 -s 0 -d 1 -p rtProtoLS -e 100 -c 0 -i 0 -a 0 -x {0.2 1.1 -1 ------- null}
+h -t 0.000169788487334637 -s 0 -d 1 -p rtProtoLS -e 100 -c 0 -i 0 -a 0 -x {0.2 1.1 -1 ------- null}
++ -t 0.00710233021858257 -s 2 -d 1 -p rtProtoLS -e 100 -c 0 -i 1 -a 0 -x {2.2 1.1 -1 ------- null}
+- -t 0.00710233021858257 -s 2 -d 1 -p rtProtoLS -e 100 -c 0 -i 1 -a 0 -x {2.2 1.1 -1 ------- null}
+h -t 0.00710233021858257 -s 2 -d 1 -p rtProtoLS -e 100 -c 0 -i 1 -a 0 -x {2.2 1.1 -1 ------- null}
+r -t 0.0109697884873346 -s 0 -d 1 -p rtProtoLS -e 100 -c 0 -i 0 -a 0 -x {0.2 1.1 -1 ------- null}
++ -t 0.0109697884873346 -s 1 -d 0 -p rtProtoLS -e 20 -c 0 -i 2 -a 0 -x {1.1 0.2 -1 ------- null}
+- -t 0.0109697884873346 -s 1 -d 0 -p rtProtoLS -e 20 -c 0 -i 2 -a 0 -x {1.1 0.2 -1 ------- null}
+h -t 0.0109697884873346 -s 1 -d 0 -p rtProtoLS -e 20 -c 0 -i 2 -a 0 -x {1.1 0.2 -1 ------- null}
++ -t 0.0109697884873346 -s 1 -d 2 -p rtProtoLS -e 100 -c 0 -i 3 -a 0 -x {1.1 2.2 -1 ------- null}
+- -t 0.0109697884873346 -s 1 -d 2 -p rtProtoLS -e 100 -c 0 -i 3 -a 0 -x {1.1 2.2 -1 ------- null}
+h -t 0.0109697884873346 -s 1 -d 2 -p rtProtoLS -e 100 -c 0 -i 3 -a 0 -x {1.1 2.2 -1 ------- null}
+r -t 0.0175023302185826 -s 2 -d 1 -p rtProtoLS -e 100 -c 0 -i 1 -a 0 -x {2.2 1.1 -1 ------- null}
++ -t 0.0175023302185826 -s 1 -d 2 -p rtProtoLS -e 20 -c 0 -i 4 -a 0 -x {1.1 2.2 -1 ------- null}
+- -t 0.0175023302185826 -s 1 -d 2 -p rtProtoLS -e 20 -c 0 -i 4 -a 0 -x {1.1 2.2 -1 ------- null}
+h -t 0.0175023302185826 -s 1 -d 2 -p rtProtoLS -e 20 -c 0 -i 4 -a 0 -x {1.1 2.2 -1 ------- null}
++ -t 0.0175023302185826 -s 1 -d 0 -p rtProtoLS -e 100 -c 0 -i 5 -a 0 -x {1.1 0.2 -1 ------- null}
+- -t 0.0175023302185826 -s 1 -d 0 -p rtProtoLS -e 100 -c 0 -i 5 -a 0 -x {1.1 0.2 -1 ------- null}
+h -t 0.0175023302185826 -s 1 -d 0 -p rtProtoLS -e 100 -c 0 -i 5 -a 0 -x {1.1 0.2 -1 ------- null}
+r -t 0.0211297884873346 -s 1 -d 0 -p rtProtoLS -e 20 -c 0 -i 2 -a 0 -x {1.1 0.2 -1 ------- null}
+r -t 0.0213697884873346 -s 1 -d 2 -p rtProtoLS -e 100 -c 0 -i 3 -a 0 -x {1.1 2.2 -1 ------- null}
++ -t 0.0213697884873346 -s 2 -d 1 -p rtProtoLS -e 20 -c 0 -i 6 -a 0 -x {2.2 1.1 -1 ------- null}
+- -t 0.0213697884873346 -s 2 -d 1 -p rtProtoLS -e 20 -c 0 -i 6 -a 0 -x {2.2 1.1 -1 ------- null}
+h -t 0.0213697884873346 -s 2 -d 1 -p rtProtoLS -e 20 -c 0 -i 6 -a 0 -x {2.2 1.1 -1 ------- null}
+r -t 0.0275823302185826 -s 1 -d 2 -p rtProtoLS -e 20 -c 0 -i 4 -a 0 -x {1.1 2.2 -1 ------- null}
+r -t 0.0283023302185826 -s 1 -d 0 -p rtProtoLS -e 100 -c 0 -i 5 -a 0 -x {1.1 0.2 -1 ------- null}
++ -t 0.0283023302185826 -s 0 -d 1 -p rtProtoLS -e 20 -c 0 -i 7 -a 0 -x {0.2 1.1 -1 ------- null}
+- -t 0.0283023302185826 -s 0 -d 1 -p rtProtoLS -e 20 -c 0 -i 7 -a 0 -x {0.2 1.1 -1 ------- null}
+h -t 0.0283023302185826 -s 0 -d 1 -p rtProtoLS -e 20 -c 0 -i 7 -a 0 -x {0.2 1.1 -1 ------- null}
+r -t 0.0314497884873346 -s 2 -d 1 -p rtProtoLS -e 20 -c 0 -i 6 -a 0 -x {2.2 1.1 -1 ------- null}
+r -t 0.0384623302185826 -s 0 -d 1 -p rtProtoLS -e 20 -c 0 -i 7 -a 0 -x {0.2 1.1 -1 ------- null}
++ -t 0.277940357931862 -s 1 -d 0 -p rtProtoLS -e 100 -c 0 -i 8 -a 0 -x {1.1 0.2 -1 ------- null}
+- -t 0.277940357931862 -s 1 -d 0 -p rtProtoLS -e 100 -c 0 -i 8 -a 0 -x {1.1 0.2 -1 ------- null}
+h -t 0.277940357931862 -s 1 -d 0 -p rtProtoLS -e 100 -c 0 -i 8 -a 0 -x {1.1 0.2 -1 ------- null}
++ -t 0.277940357931862 -s 1 -d 2 -p rtProtoLS -e 100 -c 0 -i 9 -a 0 -x {1.1 2.2 -1 ------- null}
+- -t 0.277940357931862 -s 1 -d 2 -p rtProtoLS -e 100 -c 0 -i 9 -a 0 -x {1.1 2.2 -1 ------- null}
+h -t 0.277940357931862 -s 1 -d 2 -p rtProtoLS -e 100 -c 0 -i 9 -a 0 -x {1.1 2.2 -1 ------- null}
+r -t 0.288340357931862 -s 1 -d 2 -p rtProtoLS -e 100 -c 0 -i 9 -a 0 -x {1.1 2.2 -1 ------- null}
++ -t 0.288340357931862 -s 2 -d 1 -p rtProtoLS -e 20 -c 0 -i 10 -a 0 -x {2.2 1.1 -1 ------- null}
+- -t 0.288340357931862 -s 2 -d 1 -p rtProtoLS -e 20 -c 0 -i 10 -a 0 -x {2.2 1.1 -1 ------- null}
+h -t 0.288340357931862 -s 2 -d 1 -p rtProtoLS -e 20 -c 0 -i 10 -a 0 -x {2.2 1.1 -1 ------- null}
+r -t 0.288740357931862 -s 1 -d 0 -p rtProtoLS -e 100 -c 0 -i 8 -a 0 -x {1.1 0.2 -1 ------- null}
++ -t 0.288740357931862 -s 0 -d 1 -p rtProtoLS -e 20 -c 0 -i 11 -a 0 -x {0.2 1.1 -1 ------- null}
+- -t 0.288740357931862 -s 0 -d 1 -p rtProtoLS -e 20 -c 0 -i 11 -a 0 -x {0.2 1.1 -1 ------- null}
+h -t 0.288740357931862 -s 0 -d 1 -p rtProtoLS -e 20 -c 0 -i 11 -a 0 -x {0.2 1.1 -1 ------- null}
+r -t 0.298420357931862 -s 2 -d 1 -p rtProtoLS -e 20 -c 0 -i 10 -a 0 -x {2.2 1.1 -1 ------- null}
+r -t 0.298900357931862 -s 0 -d 1 -p rtProtoLS -e 20 -c 0 -i 11 -a 0 -x {0.2 1.1 -1 ------- null}
++ -t 0.5 -s 0 -d 1 -p cbr -e 1000 -c 1 -i 12 -a 1 -x {0.0 2.0 0 ------- null}
+- -t 0.5 -s 0 -d 1 -p cbr -e 1000 -c 1 -i 12 -a 1 -x {0.0 2.0 0 ------- null}
+h -t 0.5 -s 0 -d 1 -p cbr -e 1000 -c 1 -i 12 -a 1 -x {0.0 2.0 -1 ------- null}
+r -t 0.518 -s 0 -d 1 -p cbr -e 1000 -c 1 -i 12 -a 1 -x {0.0 2.0 0 ------- null}
++ -t 0.518 -s 1 -d 2 -p cbr -e 1000 -c 1 -i 12 -a 1 -x {0.0 2.0 0 ------- null}
+- -t 0.518 -s 1 -d 2 -p cbr -e 1000 -c 1 -i 12 -a 1 -x {0.0 2.0 0 ------- null}
+h -t 0.518 -s 1 -d 2 -p cbr -e 1000 -c 1 -i 12 -a 1 -x {0.0 2.0 -1 ------- null}
+r -t 0.532 -s 1 -d 2 -p cbr -e 1000 -c 1 -i 12 -a 1 -x {0.0 2.0 0 ------- null}
+l -t 1.2 -s 1 -d 0 -S DOWN
+v -t 1.2 link-down 1.2 1 0
+l -t 1.2 -s 1 -d 0 -S DOWN
+v -t 1.2 link-down 1.2 1 0
+l -t 1.2 -s 0 -d 1 -S DOWN
+v -t 1.2 link-down 1.2 0 1
+l -t 1.2 -s 0 -d 1 -S DOWN
+v -t 1.2 link-down 1.2 0 1
++ -t 1.2 -s 1 -d 2 -p rtProtoLS -e 100 -c 0 -i 13 -a 0 -x {1.1 2.2 -1 ------- null}
+- -t 1.2 -s 1 -d 2 -p rtProtoLS -e 100 -c 0 -i 13 -a 0 -x {1.1 2.2 -1 ------- null}
+h -t 1.2 -s 1 -d 2 -p rtProtoLS -e 100 -c 0 -i 13 -a 0 -x {1.1 2.2 -1 ------- null}
+r -t 1.2104 -s 1 -d 2 -p rtProtoLS -e 100 -c 0 -i 13 -a 0 -x {1.1 2.2 -1 ------- null}
++ -t 1.2104 -s 2 -d 1 -p rtProtoLS -e 20 -c 0 -i 14 -a 0 -x {2.2 1.1 -1 ------- null}
+- -t 1.2104 -s 2 -d 1 -p rtProtoLS -e 20 -c 0 -i 14 -a 0 -x {2.2 1.1 -1 ------- null}
+h -t 1.2104 -s 2 -d 1 -p rtProtoLS -e 20 -c 0 -i 14 -a 0 -x {2.2 1.1 -1 ------- null}
+r -t 1.22048 -s 2 -d 1 -p rtProtoLS -e 20 -c 0 -i 14 -a 0 -x {2.2 1.1 -1 ------- null}
+l -t 1.7 -s 1 -d 0 -S UP
+v -t 1.7 link-up 1.7 1 0
+l -t 1.7 -s 1 -d 0 -S UP
+v -t 1.7 link-up 1.7 1 0
+l -t 1.7 -s 0 -d 1 -S UP
+v -t 1.7 link-up 1.7 0 1
+l -t 1.7 -s 0 -d 1 -S UP
+v -t 1.7 link-up 1.7 0 1
++ -t 1.7 -s 0 -d 1 -p rtProtoLS -e 100 -c 0 -i 15 -a 0 -x {0.2 1.1 -1 ------- null}
+- -t 1.7 -s 0 -d 1 -p rtProtoLS -e 100 -c 0 -i 15 -a 0 -x {0.2 1.1 -1 ------- null}
+h -t 1.7 -s 0 -d 1 -p rtProtoLS -e 100 -c 0 -i 15 -a 0 -x {0.2 1.1 -1 ------- null}
++ -t 1.7 -s 0 -d 1 -p rtProtoLS -e 200 -c 0 -i 16 -a 0 -x {0.2 1.1 -1 ------- null}
++ -t 1.7 -s 1 -d 0 -p rtProtoLS -e 100 -c 0 -i 17 -a 0 -x {1.1 0.2 -1 ------- null}
+- -t 1.7 -s 1 -d 0 -p rtProtoLS -e 100 -c 0 -i 17 -a 0 -x {1.1 0.2 -1 ------- null}
+h -t 1.7 -s 1 -d 0 -p rtProtoLS -e 100 -c 0 -i 17 -a 0 -x {1.1 0.2 -1 ------- null}
++ -t 1.7 -s 1 -d 2 -p rtProtoLS -e 100 -c 0 -i 18 -a 0 -x {1.1 2.2 -1 ------- null}
+- -t 1.7 -s 1 -d 2 -p rtProtoLS -e 100 -c 0 -i 18 -a 0 -x {1.1 2.2 -1 ------- null}
+h -t 1.7 -s 1 -d 2 -p rtProtoLS -e 100 -c 0 -i 18 -a 0 -x {1.1 2.2 -1 ------- null}
++ -t 1.7 -s 1 -d 0 -p rtProtoLS -e 200 -c 0 -i 19 -a 0 -x {1.1 0.2 -1 ------- null}
+- -t 1.7008 -s 0 -d 1 -p rtProtoLS -e 200 -c 0 -i 16 -a 0 -x {0.2 1.1 -1 ------- null}
+h -t 1.7008 -s 0 -d 1 -p rtProtoLS -e 200 -c 0 -i 16 -a 0 -x {0.2 1.1 -1 ------- null}
+- -t 1.7008 -s 1 -d 0 -p rtProtoLS -e 200 -c 0 -i 19 -a 0 -x {1.1 0.2 -1 ------- null}
+h -t 1.7008 -s 1 -d 0 -p rtProtoLS -e 200 -c 0 -i 19 -a 0 -x {1.1 0.2 -1 ------- null}
+r -t 1.7104 -s 1 -d 2 -p rtProtoLS -e 100 -c 0 -i 18 -a 0 -x {1.1 2.2 -1 ------- null}
++ -t 1.7104 -s 2 -d 1 -p rtProtoLS -e 20 -c 0 -i 20 -a 0 -x {2.2 1.1 -1 ------- null}
+- -t 1.7104 -s 2 -d 1 -p rtProtoLS -e 20 -c 0 -i 20 -a 0 -x {2.2 1.1 -1 ------- null}
+h -t 1.7104 -s 2 -d 1 -p rtProtoLS -e 20 -c 0 -i 20 -a 0 -x {2.2 1.1 -1 ------- null}
+r -t 1.7108 -s 0 -d 1 -p rtProtoLS -e 100 -c 0 -i 15 -a 0 -x {0.2 1.1 -1 ------- null}
++ -t 1.7108 -s 1 -d 0 -p rtProtoLS -e 20 -c 0 -i 21 -a 0 -x {1.1 0.2 -1 ------- null}
+- -t 1.7108 -s 1 -d 0 -p rtProtoLS -e 20 -c 0 -i 21 -a 0 -x {1.1 0.2 -1 ------- null}
+h -t 1.7108 -s 1 -d 0 -p rtProtoLS -e 20 -c 0 -i 21 -a 0 -x {1.1 0.2 -1 ------- null}
++ -t 1.7108 -s 1 -d 2 -p rtProtoLS -e 100 -c 0 -i 22 -a 0 -x {1.1 2.2 -1 ------- null}
+- -t 1.7108 -s 1 -d 2 -p rtProtoLS -e 100 -c 0 -i 22 -a 0 -x {1.1 2.2 -1 ------- null}
+h -t 1.7108 -s 1 -d 2 -p rtProtoLS -e 100 -c 0 -i 22 -a 0 -x {1.1 2.2 -1 ------- null}
+r -t 1.7108 -s 1 -d 0 -p rtProtoLS -e 100 -c 0 -i 17 -a 0 -x {1.1 0.2 -1 ------- null}
++ -t 1.7108 -s 0 -d 1 -p rtProtoLS -e 20 -c 0 -i 23 -a 0 -x {0.2 1.1 -1 ------- null}
+- -t 1.7108 -s 0 -d 1 -p rtProtoLS -e 20 -c 0 -i 23 -a 0 -x {0.2 1.1 -1 ------- null}
+h -t 1.7108 -s 0 -d 1 -p rtProtoLS -e 20 -c 0 -i 23 -a 0 -x {0.2 1.1 -1 ------- null}
+r -t 1.7124 -s 0 -d 1 -p rtProtoLS -e 200 -c 0 -i 16 -a 0 -x {0.2 1.1 -1 ------- null}
++ -t 1.7124 -s 1 -d 0 -p rtProtoLS -e 20 -c 0 -i 24 -a 0 -x {1.1 0.2 -1 ------- null}
+- -t 1.7124 -s 1 -d 0 -p rtProtoLS -e 20 -c 0 -i 24 -a 0 -x {1.1 0.2 -1 ------- null}
+h -t 1.7124 -s 1 -d 0 -p rtProtoLS -e 20 -c 0 -i 24 -a 0 -x {1.1 0.2 -1 ------- null}
+r -t 1.7124 -s 1 -d 0 -p rtProtoLS -e 200 -c 0 -i 19 -a 0 -x {1.1 0.2 -1 ------- null}
++ -t 1.7124 -s 0 -d 1 -p rtProtoLS -e 20 -c 0 -i 25 -a 0 -x {0.2 1.1 -1 ------- null}
+- -t 1.7124 -s 0 -d 1 -p rtProtoLS -e 20 -c 0 -i 25 -a 0 -x {0.2 1.1 -1 ------- null}
+h -t 1.7124 -s 0 -d 1 -p rtProtoLS -e 20 -c 0 -i 25 -a 0 -x {0.2 1.1 -1 ------- null}
+r -t 1.72048 -s 2 -d 1 -p rtProtoLS -e 20 -c 0 -i 20 -a 0 -x {2.2 1.1 -1 ------- null}
+r -t 1.72096 -s 1 -d 0 -p rtProtoLS -e 20 -c 0 -i 21 -a 0 -x {1.1 0.2 -1 ------- null}
+r -t 1.72096 -s 0 -d 1 -p rtProtoLS -e 20 -c 0 -i 23 -a 0 -x {0.2 1.1 -1 ------- null}
+r -t 1.7212 -s 1 -d 2 -p rtProtoLS -e 100 -c 0 -i 22 -a 0 -x {1.1 2.2 -1 ------- null}
++ -t 1.7212 -s 2 -d 1 -p rtProtoLS -e 20 -c 0 -i 26 -a 0 -x {2.2 1.1 -1 ------- null}
+- -t 1.7212 -s 2 -d 1 -p rtProtoLS -e 20 -c 0 -i 26 -a 0 -x {2.2 1.1 -1 ------- null}
+h -t 1.7212 -s 2 -d 1 -p rtProtoLS -e 20 -c 0 -i 26 -a 0 -x {2.2 1.1 -1 ------- null}
+r -t 1.72256 -s 1 -d 0 -p rtProtoLS -e 20 -c 0 -i 24 -a 0 -x {1.1 0.2 -1 ------- null}
+r -t 1.72256 -s 0 -d 1 -p rtProtoLS -e 20 -c 0 -i 25 -a 0 -x {0.2 1.1 -1 ------- null}
+r -t 1.73128 -s 2 -d 1 -p rtProtoLS -e 20 -c 0 -i 26 -a 0 -x {2.2 1.1 -1 ------- null}
