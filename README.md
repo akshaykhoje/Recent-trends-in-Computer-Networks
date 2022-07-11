@@ -1,3 +1,3 @@
 # UCS1511-ComputerNetworks-Labwork
 
-Programs, reports, documentation and screenshots as part of the Computer Networks lab course 
+Programs, reports, documentation and screenshots implemented and designed for the laboratory coursework on `UCS1511: Computer Networks` course 
