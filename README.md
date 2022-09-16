@@ -56,3 +56,24 @@ language.
   - [Sample Output](./Ex7-WebpageDownload/Documentation/Outputs)
   - [Report](./Ex7-WebpageDownload/Documentation/Report.pdf)
   <br><br>
+  
+  
+8. [Simple Network Simulation using NS2 and NAM](./Ex8-NetworkSimulator)
+  - Study the Network Simulator (NS2) using a simple tcl-script generated network schedule
+comprising of FTP traffic using TCP packets.
+  - Additionally, construct a constant bitrate UDP packet traffic directed
+to the same node 
+  - [Sample Output](./Ex8-NetworkSimulator/Outputs)
+  - [Report](./Ex8-NetworkSimulator/Documentation/Report.pdf)
+  <br><br>
+  
+9. [Congestion Control](./Ex9-CongestionControl)
+  - Analyze the difference between the congestion control mechanism offered by Tahoe and Reno
+TCP agents using NS2.
+  - Use a network schedule comprising of FTP traffic using TCP packets for the analysis.
+  - [Sample Output](./Ex9-CongestionControl/Documentation/Outputs)
+  - [Report](./Ex9-CongestionControl/Documentation/Report.pdf)
+  <br><br>
+  
+  
+  
