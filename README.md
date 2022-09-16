@@ -75,5 +75,13 @@ TCP agents using NS2.
   - [Report](./Ex9-CongestionControl/Documentation/Report.pdf)
   <br><br>
   
+10. [Routing Protocols](./Ex10-RoutingProtocols)
+  - Analyze the difference between the the distance-vector and link-state routing protocols when
+executing two UDP connections in a network using NS2.
+  - Use a network schedule comprising of FTP traffic using UDP datagrams for the analysis.
+  - [Sample Output](./Ex10-RoutingProtocols/Documentation/Outputs)
+  - [Report](./Ex10-RoutingProtocols/Documentation/Report.pdf)
+  <br><br>
+  
   
   
