@@ -32,10 +32,27 @@ Programs, reports, documentation and screenshots implemented and designed for th
   - Use a TCP-based multi-client server to exchange messages.
   - [Sample Output](./Ex4-ARPSimulation/Documentation/Output.png)
   - [Report](./Ex4-ARPSimulation/Documentation/Report.pdf)
+  <br><br>
 
 5. [DNS Simulation](./Ex5-DNSSimulation)
   - Simulate the working of Domain Name Server using socket programming in the C
-language,
+language.
   - Use a UDP-based multi-client server to exchange messages.
   - [Sample Output](./Ex5-DNSSimulation/Documentation/Outputs)
   - [Report](./Ex5-DNSSimulation/Documentation/Report.pdf)
+  <br><br>
+
+6. [Hamming Code for Error Correction](./Ex6-HammingCode)
+  - Implement Hamming Code for Single Error Correction using C socket program.
+  - Use a TCP-based transmission server to exchange messages.
+  - [Sample Output](./Ex6-HammingCode/Documentation/Outputs)
+  - [Report](./Ex6-HammingCode/Documentation/Report.pdf)
+  <br><br>
+
+
+7. [HTTP Web Client](./Ex7-WebpageDownload)
+  - Implement a HTTP web client program using C socket program.
+  - Construct a TCP client to connect with the web server and download a file.
+  - [Sample Output](./Ex7-WebpageDownload/Documentation/Outputs)
+  - [Report](./Ex7-WebpageDownload/Documentation/Report.pdf)
+  <br><br>
