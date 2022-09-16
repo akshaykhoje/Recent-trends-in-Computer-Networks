@@ -27,8 +27,15 @@ Programs, reports, documentation and screenshots implemented and designed for th
       - **B**: Multi-Client
     <br><br>
     
-4. [ARP Protocol](./Ex4-ARPSimulation)
+4. [ARP Simulation](./Ex4-ARPSimulation)
   - Simulate the working of ARP using socket programming in the C language.
-  - Use a TCP-based multi-client server to send messages.
-  - [Sample Output](./Ex4-ARPSimulation/Documentation/Output.pngf)
+  - Use a TCP-based multi-client server to exchange messages.
+  - [Sample Output](./Ex4-ARPSimulation/Documentation/Output.png)
   - [Report](./Ex4-ARPSimulation/Documentation/Report.pdf)
+
+5. [DNS Simulation](./Ex5-DNSSimulation)
+  - Simulate the working of Domain Name Server using socket programming in the C
+language,
+  - Use a UDP-based multi-client server to exchange messages.
+  - [Sample Output](./Ex5-DNSSimulation/Documentation/Outputs)
+  - [Report](./Ex5-DNSSimulation/Documentation/Report.pdf)
