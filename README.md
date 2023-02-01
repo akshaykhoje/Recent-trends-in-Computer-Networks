@@ -1,6 +1,8 @@
-# UCS1511-ComputerNetworks-Labwork
+# UCS1511: Computer Networks - Lab Work
 
-Programs, reports, documentation and screenshots implemented and designed for the laboratory coursework in `UCS1511: Computer Networks` 
+Programs, reports, documentation, and output screenshots implemented and designed for the laboratory coursework in **UCS1511: Computer Networks**.
+
+[Link to Documentation of All Experiments](./Reports)
 
 ## Experiments
 
