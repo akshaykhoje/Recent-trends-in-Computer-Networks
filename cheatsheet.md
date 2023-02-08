@@ -211,3 +211,9 @@ proc finish {} {
 puts "Simulation is starting"
 $ns run   // start the scheduler
 ```
+
+# RESOURCES & REFERENCES
+- https://github.com/karthik-d/Computer-Networks-LabWork
+- https://www.geeksforgeeks.org/basics-of-ns2-and-otcltcl-script/
+- https://ns2ultimate.tumblr.com/post/14953238098/event-driven-simulation-event-scheduler
+- https://github.com/lakshyabatman/NS2-Soup/blob/master/wired.tcl
